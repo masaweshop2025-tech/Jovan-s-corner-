@@ -5,18 +5,23 @@
 
     <style>
         body {
-            font-family: Arial;
             margin: 0;
+            font-family: Arial;
             background: #111;
             color: white;
         }
 
         header {
             background: red;
-            padding: 15px;
             text-align: center;
-            font-size: 26px;
+            padding: 15px;
             font-weight: bold;
+            font-size: 22px;
+        }
+
+        header img {
+            width: 60px;
+            border-radius: 50%;
         }
 
         nav {
@@ -48,14 +53,15 @@
 
         .news {
             background: #222;
-            margin-bottom: 15px;
             padding: 15px;
+            margin-bottom: 15px;
             border-radius: 10px;
         }
 
         .news img {
             width: 100%;
             border-radius: 10px;
+            margin-bottom: 10px;
         }
 
         .news h2 {
@@ -69,13 +75,25 @@
             margin-top: 20px;
         }
 
+        .social {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .social a {
+            color: white;
+            margin: 5px;
+            text-decoration: none;
+        }
+
+        /* WhatsApp Button */
         .whatsapp {
             position: fixed;
             bottom: 20px;
             right: 20px;
             background: green;
             color: white;
-            padding: 10px 15px;
+            padding: 12px 15px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: bold;
@@ -86,20 +104,22 @@
 <body>
 
 <header>
-🔥 JOVAN'S CORNER
-<br>
-<nav>
-    <a href="#">Home</a>
-    <a href="#">News</a>
-    <a href="#">Contact</a>
-</nav>
+    <img src="https://picsum.photos/100">
+    <br>
+    🔥 JOVAN'S CORNER
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#news">News</a>
+        <a href="#contact">Contact</a>
+    </nav>
 </header>
 
 <div class="breaking">
-🚨 BREAKING NEWS: Karibu kwenye website rasmi ya Jovan's Corner!
+    🚨 BREAKING NEWS: Karibu kwenye website rasmi ya Jovan's Corner!
 </div>
 
-<div class="container">
+<div class="container" id="news">
 
     <div class="news">
         <img src="https://picsum.photos/400/200?news">
@@ -121,13 +141,31 @@
 
 </div>
 
+<!-- CONTACT -->
+<div class="container" id="contact">
+    <div class="news">
+        <h2>📞 Contact Us</h2>
+        <p>📱 WhatsApp: 2557XXXXXXXX</p>
+        <p>📸 Instagram: @jovanscorner</p>
+        <p>🎵 TikTok: @jovanscorner</p>
+    </div>
+</div>
+
 <footer>
-© 2026 Jovan's Corner | Follow for more 🔥
+    © 2026 Jovan's Corner | Follow for more 🔥
 </footer>
 
-<a href="https://wa.me/255687273146 class="whatsapp">
-📲 Chat WhatsApp
+<div class="social">
+    <a href="#">📘 Facebook</a>
+    <a href="#">📸 Instagram</a>
+    <a href="#">🎵 TikTok</a>
+</div>
+
+<!-- WhatsApp Button -->
+<a href="https://wa.me/255617816758 class="whatsapp">
+    💬 Chat WhatsApp
 </a>
 
 </body>
+</html></body>
 </html>
