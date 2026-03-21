@@ -1,8 +1,55 @@
 <!DOCTYPE html>
+</div>
+</div>
+
+<div class="container" id="news">
+
+<div class="news">
+<img src="https://picsum.photos/400/200?news">
+<h2>📰 Habari Mpya</h2>
+<p>Hapa utapata habari zote mpya za ndani na nje ya nchi.</p>
+</div>
+
+<div class="news">
+<img src="https://picsum.photos/400/200?football">
+<h2>⚽ Michezo</h2>
+<p>Updates za mechi, matokeo na taarifa za sports kila siku.</p>
+</div>
+
+<div class="news">
+<img src="https://picsum.photos/400/200?business">
+<h2>💼 Biashara</h2>
+<p>Tangaza biashara yako hapa Jovan's Corner kwa promo 🔥</p>
+</div>
+
+</div>
+
+<div class="container" id="contact">
+<div class="news">
+</div>
+</div>
+
+<footer>
+© 2026 Jovan's Corner | Follow for more 🔥
+</footer>
+
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+}
+</script>
+
+</body>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Jovan's Corner</title>
+
+<link rel="manifest" href="manifest.json">
 
 <style>
 body {
@@ -19,7 +66,6 @@ header {
   padding: 15px;
   font-size: 22px;
   font-weight: bold;
-  box-shadow: 0 0 10px red;
 }
 
 /* NAV */
@@ -36,7 +82,18 @@ nav a:hover {
   color: yellow;
 }
 
-/* BREAKING NEWS */
+/* INSTALL BUTTON */
+#installBtn {
+  display: none;
+  margin: 10px auto;
+  padding: 10px 15px;
+  border: none;
+  background: green;
+  color: white;
+  border-radius: 10px;
+}
+
+/* BREAKING */
 .breaking {
   background: yellow;
   color: black;
@@ -55,18 +112,16 @@ nav a:hover {
   to { transform: translateX(-100%); }
 }
 
-/* CONTAINER */
+/* CARDS */
 .container {
   padding: 15px;
 }
 
-/* CARDS */
 .news {
   background: #111;
   margin-bottom: 20px;
   padding: 15px;
   border-radius: 15px;
-  box-shadow: 0 0 10px black;
   transition: 0.3s;
 }
 
@@ -81,7 +136,7 @@ nav a:hover {
 }
 
 .news h2 {
-  color: #ff4444;
+  color: red;
 }
 
 /* FOOTER */
@@ -94,12 +149,10 @@ footer {
 /* SOCIAL */
 .social {
   text-align: center;
-  padding: 10px;
 }
 .social a {
   color: white;
   margin: 10px;
-  text-decoration: none;
 }
 
 /* WHATSAPP */
@@ -128,6 +181,8 @@ footer {
 <a href="#contact">Contact</a>
 </nav>
 </header>
+
+<button id="installBtn">📲 Install App</button>
 
 <div class="breaking">
 <div class="marquee">
@@ -170,51 +225,37 @@ footer {
 © 2026 Jovan's Corner | Follow for more 🔥
 </footer>
 
-
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-}
-</script>
-
-</body>
-</html>
-    <div class="news">
-        <img src="https://picsum.photos/400/200?business">
-        <h2>💼 Biashara</h2>
-        <p>Tangaza biashara yako hapa Jovan's Corner kwa promo 🔥</p>
-    </div>
-
-</div>
-
-<!-- CONTACT -->
-<div class="container" id="contact">
-    <div class="news">
-        <h2>📞 Contact Us</h2>
-        <p>📱 WhatsApp: 255687273146</p>
-        <p>📸 Instagram: @jovanscorner</p>
-        <p>🎵 TikTok: @jovanscorner</p>
-    </div>
-</div>
-
-<footer>
-    © 2026 Jovan's Corner | Follow for more 🔥
-</footer>
-
 <div class="social">
-    <a href="#">📘 Facebook</a>
-    <a href="#">📸 Instagram</a>
-    <a href="#">🎵 TikTok</a>
+<a href="#">Facebook</a>
+<a href="#">Instagram</a>
+<a href="#">TikTok</a>
 </div>
 
+<a href="https://wa.me/255617816758" class="whatsapp">
+💬 Chat WhatsApp
 </a>
 
+<!-- INSTALL SCRIPT -->
+<script>
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').style.display = 'block';
+});
+
+document.getElementById('installBtn').addEventListener('click', () => {
+  deferredPrompt.prompt();
+});
+</script>
+
+<!-- SERVICE WORKER -->
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
+  navigator.serviceWorker.register('sw.js');
 }
 </script>
 
 </body>
-</html>
-
+  </html>
