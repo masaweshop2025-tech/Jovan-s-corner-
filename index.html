@@ -1,138 +1,193 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Jovan's Corner</title>
+<meta charset="UTF-8">
+<title>Jovan's Corner</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial;
-            background: #111;
-            color: white;
-        }
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  color: white;
+}
 
-        header {
-            background: red;
-            text-align: center;
-            padding: 15px;
-            font-weight: bold;
-            font-size: 22px;
-        }
+/* HEADER */
+header {
+  background: linear-gradient(45deg, red, orange);
+  text-align: center;
+  padding: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  box-shadow: 0 0 10px red;
+}
 
-        header img {
-            width: 60px;
-            border-radius: 50%;
-        }
+/* NAV */
+nav {
+  margin-top: 10px;
+}
+nav a {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+  font-weight: bold;
+}
+nav a:hover {
+  color: yellow;
+}
 
-        nav {
-            margin-top: 10px;
-        }
+/* BREAKING NEWS */
+.breaking {
+  background: yellow;
+  color: black;
+  padding: 10px;
+  overflow: hidden;
+  white-space: nowrap;
+}
 
-        nav a {
-            color: white;
-            margin: 0 10px;
-            text-decoration: none;
-            font-weight: bold;
-        }
+.marquee {
+  display: inline-block;
+  animation: move 10s linear infinite;
+}
 
-        nav a:hover {
-            color: yellow;
-        }
+@keyframes move {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
+}
 
-        .breaking {
-            background: yellow;
-            color: black;
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
-        }
+/* CONTAINER */
+.container {
+  padding: 15px;
+}
 
-        .container {
-            padding: 15px;
-        }
+/* CARDS */
+.news {
+  background: #111;
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px black;
+  transition: 0.3s;
+}
 
-        .news {
-            background: #222;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-        }
+.news:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 15px yellow;
+}
 
-        .news img {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
+.news img {
+  width: 100%;
+  border-radius: 10px;
+}
 
-        .news h2 {
-            color: red;
-        }
+.news h2 {
+  color: #ff4444;
+}
 
-        footer {
-            background: black;
-            text-align: center;
-            padding: 10px;
-            margin-top: 20px;
-        }
+/* FOOTER */
+footer {
+  background: black;
+  text-align: center;
+  padding: 10px;
+}
 
-        .social {
-            text-align: center;
-            margin-top: 10px;
-        }
+/* SOCIAL */
+.social {
+  text-align: center;
+  padding: 10px;
+}
+.social a {
+  color: white;
+  margin: 10px;
+  text-decoration: none;
+}
 
-        .social a {
-            color: white;
-            margin: 5px;
-            text-decoration: none;
-        }
+/* WHATSAPP */
+.whatsapp {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: green;
+  color: white;
+  padding: 12px 15px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+}
+</style>
 
-        /* WhatsApp Button */
-        .whatsapp {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: green;
-            color: white;
-            padding: 12px 15px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-    </style>
 </head>
 
 <body>
 
 <header>
-    <img src="https://picsum.photos/100">
-    <br>
-    🔥 JOVAN'S CORNER
-
-    <nav>
-        <a href="#">Home</a>
-        <a href="#news">News</a>
-        <a href="#contact">Contact</a>
-    </nav>
+🔥 JOVAN'S CORNER
+<nav>
+<a href="#">Home</a>
+<a href="#news">News</a>
+<a href="#contact">Contact</a>
+</nav>
 </header>
 
 <div class="breaking">
-    🚨 BREAKING NEWS: Karibu kwenye website rasmi ya Jovan's Corner!
+<div class="marquee">
+🚨 BREAKING NEWS: Karibu kwenye website rasmi ya Jovan's Corner 🔥🔥🔥
+</div>
 </div>
 
 <div class="container" id="news">
 
-    <div class="news">
-        <img src="https://picsum.photos/400/200?news">
-        <h2>📰 Habari Mpya</h2>
-        <p>Hapa utapata habari zote mpya za ndani na nje ya nchi.</p>
-    </div>
+<div class="news">
+<img src="https://picsum.photos/400/200?news">
+<h2>📰 Habari Mpya</h2>
+<p>Hapa utapata habari zote mpya za ndani na nje ya nchi.</p>
+</div>
 
-    <div class="news">
-        <img src="https://picsum.photos/400/200?football">
-        <h2>⚽ Michezo</h2>
-        <p>Updates za mechi, matokeo na taarifa za sports kila siku.</p>
-    </div>
+<div class="news">
+<img src="https://picsum.photos/400/200?football">
+<h2>⚽ Michezo</h2>
+<p>Updates za mechi, matokeo na taarifa za sports kila siku.</p>
+</div>
 
+<div class="news">
+<img src="https://picsum.photos/400/200?business">
+<h2>💼 Biashara</h2>
+<p>Tangaza biashara yako hapa Jovan's Corner kwa promo 🔥</p>
+</div>
+
+</div>
+
+<div class="container" id="contact">
+<div class="news">
+<h2>📞 Contact Us</h2>
+<p>📱 WhatsApp: 25568723146</p>
+<p>📸 Instagram: @jovanscorner</p>
+<p>🎵 TikTok: @jovanscorner</p>
+</div>
+</div>
+
+<footer>
+© 2026 Jovan's Corner | Follow for more 🔥
+</footer>
+
+<div class="social">
+<a href="#">Facebook</a>
+<a href="#">Instagram</a>
+<a href="#">TikTok</a>
+</div>
+
+<a href="https://wa.me/255617816758" class="whatsapp">
+💬 Chat WhatsApp
+</a>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+}
+</script>
+
+</body>
+</html>
     <div class="news">
         <img src="https://picsum.photos/400/200?business">
         <h2>💼 Biashara</h2>
