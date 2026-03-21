@@ -1,47 +1,4 @@
 <!DOCTYPE html>
-</div>
-</div>
-
-<div class="container" id="news">
-
-<div class="news">
-<img src="https://picsum.photos/400/200?news">
-<h2>📰 Habari Mpya</h2>
-<p>Hapa utapata habari zote mpya za ndani na nje ya nchi.</p>
-</div>
-
-<div class="news">
-<img src="https://picsum.photos/400/200?football">
-<h2>⚽ Michezo</h2>
-<p>Updates za mechi, matokeo na taarifa za sports kila siku.</p>
-</div>
-
-<div class="news">
-<img src="https://picsum.photos/400/200?business">
-<h2>💼 Biashara</h2>
-<p>Tangaza biashara yako hapa Jovan's Corner kwa promo 🔥</p>
-</div>
-
-</div>
-
-<div class="container" id="contact">
-<div class="news">
-</div>
-</div>
-
-<footer>
-© 2026 Jovan's Corner | Follow for more 🔥
-</footer>
-
-
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-}
-</script>
-
-</body>
-<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -55,51 +12,41 @@ if ('serviceWorker' in navigator) {
 body {
   margin: 0;
   font-family: Arial;
-  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(135deg, black, #001f3f, #000);
   color: white;
 }
 
-/* HEADER */
+/* 🔥 LOGO HEADER STYLE */
 header {
-  background: linear-gradient(45deg, red, orange);
+  position: sticky;
+  top: 0;
   text-align: center;
   padding: 15px;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
+  background: linear-gradient(90deg, red, blue, black, white, gold);
+  color: black;
+  text-shadow: 0 0 10px white;
+  border-bottom: 3px solid gold;
 }
 
 /* NAV */
-nav {
-  margin-top: 10px;
-}
 nav a {
-  color: white;
   margin: 0 10px;
   text-decoration: none;
   font-weight: bold;
+  color: black;
 }
 nav a:hover {
-  color: yellow;
-}
-
-/* INSTALL BUTTON */
-#installBtn {
-  display: none;
-  margin: 10px auto;
-  padding: 10px 15px;
-  border: none;
-  background: green;
-  color: white;
-  border-radius: 10px;
+  color: red;
 }
 
 /* BREAKING */
 .breaking {
-  background: yellow;
-  color: black;
+  background: black;
+  color: yellow;
   padding: 10px;
   overflow: hidden;
-  white-space: nowrap;
 }
 
 .marquee {
@@ -112,22 +59,24 @@ nav a:hover {
   to { transform: translateX(-100%); }
 }
 
-/* CARDS */
+/* CONTAINER */
 .container {
   padding: 15px;
 }
 
+/* CARDS */
 .news {
   background: #111;
   margin-bottom: 20px;
   padding: 15px;
   border-radius: 15px;
+  box-shadow: 0 0 15px rgba(255,255,255,0.2);
   transition: 0.3s;
 }
 
 .news:hover {
   transform: scale(1.03);
-  box-shadow: 0 0 15px yellow;
+  box-shadow: 0 0 20px gold;
 }
 
 .news img {
@@ -144,15 +93,7 @@ footer {
   background: black;
   text-align: center;
   padding: 10px;
-}
-
-/* SOCIAL */
-.social {
-  text-align: center;
-}
-.social a {
-  color: white;
-  margin: 10px;
+  border-top: 2px solid gold;
 }
 
 /* WHATSAPP */
@@ -174,7 +115,8 @@ footer {
 <body>
 
 <header>
-🔥 JOVAN'S CORNER
+🔥 JOVAN'S CORNER  
+<br>
 <nav>
 <a href="#">Home</a>
 <a href="#news">News</a>
@@ -182,11 +124,9 @@ footer {
 </nav>
 </header>
 
-<button id="installBtn">📲 Install App</button>
-
 <div class="breaking">
 <div class="marquee">
-🚨 BREAKING NEWS: Karibu kwenye website rasmi ya Jovan's Corner 🔥🔥🔥
+🚨 Breaking News: Karibu kwenye Jovan's Corner 🔥 Habari Moto Kila Siku!
 </div>
 </div>
 
@@ -225,32 +165,10 @@ footer {
 © 2026 Jovan's Corner | Follow for more 🔥
 </footer>
 
-<div class="social">
-<a href="#">Facebook</a>
-<a href="#">Instagram</a>
-<a href="#">TikTok</a>
-</div>
-
 <a href="https://wa.me/255617816758" class="whatsapp">
 💬 Chat WhatsApp
 </a>
 
-<!-- INSTALL SCRIPT -->
-<script>
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('installBtn').style.display = 'block';
-});
-
-document.getElementById('installBtn').addEventListener('click', () => {
-  deferredPrompt.prompt();
-});
-</script>
-
-<!-- SERVICE WORKER -->
 <script>
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
@@ -258,4 +176,4 @@ if ('serviceWorker' in navigator) {
 </script>
 
 </body>
-  </html>
+</html>
