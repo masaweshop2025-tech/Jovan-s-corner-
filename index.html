@@ -186,14 +186,27 @@ function addToCart(name,price){
 
 /* PAYMENT + WHATSAPP */
 function checkout(){
-  let msg = "ORDER:%0A";
+
+  let method = prompt("Chagua malipo:\n1. M-Pesa\n2. Cash");
+
+  let msg = "🛒 ORDER:%0A";
+
   cart.forEach(item=>{
     msg += item + "%0A";
   });
-  msg += "TOTAL: " + total + " Tsh";
+
+  msg += "TOTAL: " + total + " Tsh%0A";
+
+  if(method == "1"){
+    msg += "PAYMENT: M-Pesa%0A";
+    msg += "Namba: 255617816758%0A";
+    msg += "Tafadhali tuma pesa kisha tuma uthibitisho.";
+  } else {
+    msg += "PAYMENT: Cash on Delivery";
+  }
 
   window.open("https://wa.me/255617816758?text="+msg);
-}
+  }
 </script>
 
 </body>
