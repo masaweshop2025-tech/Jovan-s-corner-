@@ -23,10 +23,9 @@ header{
 /* SEARCH */
 .search{
   padding:10px;
-  text-align:center;
 }
 .search input{
-  width:90%;
+  width:100%;
   padding:10px;
   border-radius:20px;
   border:none;
@@ -65,7 +64,7 @@ header{
   color:white;
 }
 
-/* CART */
+/* CART BUTTON */
 .cart-btn{
   position:fixed;
   top:10px;
@@ -73,18 +72,24 @@ header{
   background:red;
   padding:10px;
   border-radius:50%;
+  z-index:1000;
 }
 
+/* CART */
 .cart{
   position:fixed;
   top:0;
   right:-100%;
-  width:280px;
+  width:85%;
+  max-width:320px;
   height:100%;
-  background:black;
+  background:#0b0b0b;
   padding:15px;
   transition:0.4s;
+  box-shadow:-5px 0 15px rgba(0,0,0,0.7);
+  border-left:2px solid red;
   overflow:auto;
+  z-index:1000;
 }
 
 .cart.active{
@@ -96,7 +101,20 @@ header{
   font-size:18px;
 }
 
-/* QUANTITY */
+/* OPTIONS */
+.option{
+  background:#111;
+  padding:10px;
+  margin:8px 0;
+  border-radius:10px;
+  border:1px solid #333;
+}
+
+.option.active{
+  border:2px solid red;
+}
+
+/* QTY */
 .qty button{
   padding:5px;
   margin:3px;
@@ -149,7 +167,11 @@ footer{
 
 <!-- CART -->
 <div class="cart" id="cart">
+
+<div style="display:flex;justify-content:space-between;">
 <h2>🛒 Cart</h2>
+<button onclick="toggleCart()" style="background:none;color:white;border:none;font-size:20px;">❌</button>
+</div>
 
 <div id="items"></div>
 
@@ -159,18 +181,27 @@ footer{
 <hr>
 
 <h3>🚚 Delivery</h3>
-<select id="delivery">
-<option value="Free">Free</option>
-<option value="5000">City Delivery - 5000 Tsh</option>
-</select>
+
+<div class="option active" onclick="selectDelivery('Free', this)">
+Free Delivery
+</div>
+
+<div class="option" onclick="selectDelivery('5000 Tsh', this)">
+City Delivery - 5000 Tsh
+</div>
 
 <h3>💳 Payment</h3>
-<select id="payment">
-<option value="M-Pesa">M-Pesa</option>
-<option value="Cash">Cash</option>
-</select>
 
-<button class="btn" onclick="checkout()">Order</button>
+<div class="option active" onclick="selectPayment('M-Pesa', this)">
+M-Pesa 📲
+</div>
+
+<div class="option" onclick="selectPayment('Cash', this)">
+Cash on Delivery 💵
+</div>
+
+<button class="btn" onclick="checkout()">Order Now</button>
+
 </div>
 
 <footer>© 2026 Jovan's Store 🔥</footer>
@@ -179,6 +210,9 @@ footer{
 let cart = {};
 let total = 0;
 let count = 0;
+
+let delivery = "Free";
+let payment = "M-Pesa";
 
 function toggleCart(){
   document.getElementById("cart").classList.toggle("active");
@@ -194,7 +228,7 @@ function addToCart(name,price){
 }
 
 function updateCart(){
-  let itemsHTML = "";
+  let html = "";
   total = 0;
   count = 0;
 
@@ -203,9 +237,9 @@ function updateCart(){
     total += p.price * p.qty;
     count += p.qty;
 
-    itemsHTML += `
+    html += `
     <div>
-      <p>${item} (${p.qty})</p>
+      <p>${item} (x${p.qty})</p>
       <div class="qty">
         <button onclick="changeQty('${item}',-1)">-</button>
         <button onclick="changeQty('${item}',1)">+</button>
@@ -214,7 +248,7 @@ function updateCart(){
     `;
   }
 
-  document.getElementById("items").innerHTML = itemsHTML;
+  document.getElementById("items").innerHTML = html;
   document.getElementById("total").innerText = total;
   document.getElementById("count").innerText = count;
 }
@@ -227,35 +261,42 @@ function changeQty(name,val){
   updateCart();
 }
 
-function checkout(){
-  let delivery = document.getElementById("delivery").value;
-  let payment = document.getElementById("payment").value;
+function selectDelivery(val,el){
+  delivery = val;
+  document.querySelectorAll("h3:nth-of-type(1) + .option, h3:nth-of-type(1) + .option + .option")
+    .forEach(o=>o.classList.remove("active"));
+  el.classList.add("active");
+}
 
+function selectPayment(val,el){
+  payment = val;
+  document.querySelectorAll("h3:nth-of-type(2) + .option, h3:nth-of-type(2) + .option + .option")
+    .forEach(o=>o.classList.remove("active"));
+  el.classList.add("active");
+}
+
+function checkout(){
   let msg = "🛒 ORDER:%0A";
 
   for(let item in cart){
     msg += item + " x" + cart[item].qty + "%0A";
   }
 
-  msg += "Items: " + count + "%0A";
-  msg += "TOTAL: " + total + " Tsh%0A";
-  msg += "Delivery: " + delivery + "%0A";
-  msg += "Payment: " + payment;
+  msg += "%0AItems: " + count;
+  msg += "%0ATOTAL: " + total + " Tsh";
+  msg += "%0ADelivery: " + delivery;
+  msg += "%0APayment: " + payment;
 
   window.open("https://wa.me/255617816758?text="+msg);
 }
 
-function search(value){
-  let cards = document.querySelectorAll(".card");
-  cards.forEach(card=>{
-    if(card.dataset.name.toLowerCase().includes(value.toLowerCase())){
-      card.style.display="block";
-    }else{
-      card.style.display="none";
-    }
+function search(val){
+  document.querySelectorAll(".card").forEach(card=>{
+    card.style.display = card.dataset.name.toLowerCase().includes(val.toLowerCase())
+    ? "block" : "none";
   });
 }
 </script>
 
 </body>
-  </html>
+</html>
