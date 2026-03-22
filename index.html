@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jovan's Corner Shop</title>
+<title>Jovan's Shoe Store</title>
 
 <style>
 body{
@@ -19,7 +19,6 @@ header{
   padding:15px;
   text-align:center;
   font-size:22px;
-  font-weight:bold;
 }
 
 /* SEARCH */
@@ -97,17 +96,12 @@ header{
 
 .total{
   color:yellow;
-  font-size:18px;
 }
 
-/* PAYMENT */
-.checkout{
-  margin-top:10px;
-  background:green;
+/* ADMIN */
+.admin{
   padding:10px;
-  border:none;
-  width:100%;
-  border-radius:10px;
+  background:#111;
 }
 
 /* FOOTER */
@@ -122,35 +116,28 @@ footer{
 
 <body>
 
-<header>🔥 JOVAN'S CORNER SHOP 👟</header>
+<header>🔥 JOVAN'S SHOE STORE 👟</header>
 
 <button class="cart-btn" onclick="toggleCart()">🛒</button>
 
 <div class="search">
-<input placeholder="Search shoes...">
+<input placeholder="Search shoes..." onkeyup="search(this.value)">
 </div>
 
-<div class="products">
+<div class="products" id="products">
 
-<div class="card">
+<div class="card" data-name="Nike">
 <img src="https://picsum.photos/200?1">
 <h3>Nike</h3>
-<p>50,000 Tsh</p>
+<p>50000 Tsh</p>
 <button class="btn" onclick="addToCart('Nike',50000)">Add</button>
 </div>
 
-<div class="card">
+<div class="card" data-name="Adidas">
 <img src="https://picsum.photos/200?2">
 <h3>Adidas</h3>
-<p>60,000 Tsh</p>
+<p>60000 Tsh</p>
 <button class="btn" onclick="addToCart('Adidas',60000)">Add</button>
-</div>
-
-<div class="card">
-<img src="https://picsum.photos/200?3">
-<h3>Puma</h3>
-<p>40,000 Tsh</p>
-<button class="btn" onclick="addToCart('Puma',40000)">Add</button>
 </div>
 
 </div>
@@ -160,13 +147,22 @@ footer{
 <h2>🛒 Cart</h2>
 <div id="items"></div>
 <p class="total">Total: <span id="total">0</span> Tsh</p>
-
-<button class="checkout" onclick="checkout()">Pay / Order</button>
+<button class="btn" onclick="checkout()">Pay / Order</button>
 </div>
 
-<footer>
-© 2026 Jovan's Corner 🔥
-</footer>
+<!-- ADMIN DASHBOARD -->
+<div class="admin">
+<h2>⚙️ Admin Dashboard</h2>
+
+<input id="name" placeholder="Product name"><br><br>
+<input id="price" placeholder="Price"><br><br>
+<input id="image" placeholder="Image URL"><br><br>
+
+<button class="btn" onclick="addProduct()">Add Product</button>
+
+</div>
+
+<footer>© 2026 Jovan's Store 🔥</footer>
 
 <script>
 let cart = [];
@@ -184,39 +180,26 @@ function addToCart(name,price){
   document.getElementById("total").innerText = total;
 }
 
-/* PAYMENT + WHATSAPP */
 function checkout(){
-
-  let method = prompt("Chagua malipo:\n1. M-Pesa\n2. Cash");
-
   let msg = "🛒 ORDER:%0A";
-
   cart.forEach(item=>{
     msg += item + "%0A";
   });
 
   msg += "TOTAL: " + total + " Tsh%0A";
-
-  if(method == "1"){
-    msg += "PAYMENT: M-Pesa%0A";
-    msg += "Namba: 255617816758%0A";
-    msg += "Tafadhali tuma pesa kisha tuma uthibitisho.";
-  } else {
-    msg += "PAYMENT: Cash on Delivery";
-  }
+  msg += "PAYMENT: M-Pesa%0A";
+  msg += "Namba: 255617816758";
 
   window.open("https://wa.me/255617816758?text="+msg);
-  }
-</script>
+}
 
-</body>function addProduct(){
-
+function addProduct(){
   let name = document.getElementById("name").value;
   let price = document.getElementById("price").value;
   let image = document.getElementById("image").value;
 
   let product = `
-  <div class="card">
+  <div class="card" data-name="${name}">
   <img src="${image}">
   <h3>${name}</h3>
   <p>${price} Tsh</p>
@@ -224,6 +207,20 @@ function checkout(){
   </div>
   `;
 
-  document.getElementById("adminProducts").innerHTML += product;
+  document.getElementById("products").innerHTML += product;
 }
+
+function search(value){
+  let cards = document.querySelectorAll(".card");
+  cards.forEach(card=>{
+    if(card.dataset.name.toLowerCase().includes(value.toLowerCase())){
+      card.style.display="block";
+    }else{
+      card.style.display="none";
+    }
+  });
+}
+</script>
+
+</body>
 </html>
