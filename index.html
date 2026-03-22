@@ -11,85 +11,205 @@ body{margin:0;font-family:Arial;background:#0a0a0a;color:white}
 /* HEADER */
 header{background:linear-gradient(90deg,red,blue);padding:10px}
 .top{display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;gap:10px;align-items:center}
+.logo img{width:35px}
+
+/* SLIDE TEXT */
+.marquee{
+overflow:hidden;
+white-space:nowrap;
+animation:slide 10s linear infinite;
+color:yellow;
+}
+@keyframes slide{
+0%{transform:translateX(100%)}
+100%{transform:translateX(-100%)}
+}
 
 /* SEARCH */
-.search input{width:100%;padding:10px;border-radius:20px;border:none}
+.search input{
+width:100%;
+padding:10px;
+border-radius:20px;
+border:none;
+}
 
 /* PRODUCTS */
-.products{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
-.card{background:#111;padding:10px;border-radius:15px}
-.card img{width:100%;border-radius:10px}
+.products{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+padding:10px;
+}
+.card{
+background:#111;
+padding:10px;
+border-radius:15px;
+}
+.card img{
+width:100%;
+border-radius:10px;
+}
 .card h3{color:yellow}
 
 /* BUTTON */
-.btn{background:red;border:none;padding:10px;width:100%;border-radius:10px;color:white}
+.btn{
+background:red;
+border:none;
+padding:10px;
+width:100%;
+border-radius:10px;
+color:white;
+}
 
 /* CART */
-.cart{position:fixed;right:-100%;top:0;width:100%;max-width:350px;height:100%;background:black;padding:15px;transition:0.3s}
+.cart{
+position:fixed;
+right:-100%;
+top:0;
+width:100%;
+max-width:350px;
+height:100%;
+background:black;
+padding:15px;
+transition:0.3s;
+overflow:auto;
+}
 .cart.active{right:0}
 
+/* OPTIONS */
+.option{
+border:1px solid #333;
+padding:10px;
+margin:5px 0;
+border-radius:10px;
+cursor:pointer;
+}
+.option.active{
+border:2px solid red;
+}
+
 /* FLOAT BUTTON */
-.float{position:fixed;top:10px;right:10px;background:red;color:white;padding:10px;border-radius:50%}
+.float{
+position:fixed;
+top:10px;
+right:10px;
+background:red;
+color:white;
+padding:10px;
+border-radius:50%;
+}
 
 /* WHATSAPP */
-.whatsapp{position:fixed;bottom:20px;right:20px;background:green;color:white;padding:15px;border-radius:50px;text-decoration:none}
+.whatsapp{
+position:fixed;
+bottom:20px;
+right:20px;
+background:green;
+color:white;
+padding:15px;
+border-radius:50px;
+text-decoration:none;
+}
 
 /* DASHBOARD */
-#dashboard{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;padding:20px;overflow:auto}
+#dashboard{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+padding:20px;
+overflow:auto;
+}
 </style>
-
 </head>
 
 <body>
 
 <header>
+
 <div class="top">
-<b>JOVAN'S CORNER</b>
-<button onclick="openDashboard()">📦 Orders</button>
+
+<div class="logo">
+<img src="https://cdn-icons-png.flaticon.com/512/892/892458.png">
+<b id="title">JOVAN'S CORNER</b>
 </div>
+
+<div>
+<select onchange="changeLang(this.value)">
+<option value="sw">🇹🇿 Sw</option>
+<option value="en">🇬🇧 En</option>
+<option value="tr">🇹🇷 Tr</option>
+<option value="zh">🇨🇳 Zh</option>
+<option value="es">🇪🇸 Es</option>
+</select>
+
+<button onclick="openDashboard()">📊</button>
+</div>
+
+</div>
+
+<div class="marquee" id="welcome">
+🔥 Karibu Jovan's Corner - Viatu bora 🔥
+</div>
+
 </header>
 
 <div class="search">
-<input type="text" placeholder="Search shoes..." onkeyup="searchProduct(this.value)">
+<input type="text" placeholder="Tafuta viatu..." onkeyup="searchProduct(this.value)">
 </div>
 
 <div class="products" id="products"></div>
 
 <!-- CART -->
 <div class="cart" id="cart">
-<h2>Cart <span onclick="toggleCart()">❌</span></h2>
+
+<h2>🛒 Cart <span onclick="toggleCart()">❌</span></h2>
 
 <div id="cartItems"></div>
 
+<p>Items: <span id="count">0</span></p>
 <p>Total: <span id="total">0</span> Tsh</p>
 
-<button class="btn" onclick="order()">Order</button>
+<h3>🚚 Delivery</h3>
+<div class="option active" onclick="selectDelivery(this,0)">Free</div>
+<div class="option" onclick="selectDelivery(this,5000)">City - 5000</div>
+
+<h3>💳 Payment</h3>
+<div class="option active" onclick="selectPayment(this,'mpesa')">M-Pesa</div>
+<div class="option" onclick="selectPayment(this,'cash')">Cash</div>
+
+<button class="btn" onclick="order()">Order Now</button>
+
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard">
-<h2>Orders Dashboard ❌ <span onclick="closeDashboard()">Close</span></h2>
+<h2>Orders <span onclick="closeDashboard()">❌</span></h2>
 <div id="history"></div>
 </div>
 
 <button class="float" onclick="toggleCart()">🛒</button>
-
 <a href="https://wa.me/255617816758" class="whatsapp">💬</a>
 
 <script>
 
-/* REAL PRODUCTS */
+/* PRODUCTS REAL */
 let products=[
 {name:"Nike Air Max",price:50000,img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"},
 {name:"Adidas Ultraboost",price:65000,img:"https://images.unsplash.com/photo-1528701800489-20be3c5c9f49"},
 {name:"Puma RS-X",price:55000,img:"https://images.unsplash.com/photo-1519741497674-611481863552"},
-{name:"Jordan 1 Retro",price:75000,img:"https://images.unsplash.com/photo-1600180758890-6b94519a8ba6"},
-{name:"Nike Revolution",price:40000,img:"https://images.unsplash.com/photo-1514989940723-e8e51635b782"},
-{name:"Adidas Runfalcon",price:42000,img:"https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a"}
+{name:"Jordan Retro",price:75000,img:"https://images.unsplash.com/photo-1600180758890-6b94519a8ba6"},
+{name:"Nike Zoom",price:45000,img:"https://images.unsplash.com/photo-1514989940723-e8e51635b782"},
+{name:"Adidas Run",price:42000,img:"https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a"}
 ];
 
 let cart=[];
-let orders=[];
+let delivery=0;
+let payment="mpesa";
 
 /* LOAD */
 function loadProducts(){
@@ -124,7 +244,8 @@ html+=`<p>${p.name}</p>`;
 });
 
 document.getElementById("cartItems").innerHTML=html;
-document.getElementById("total").innerText=total;
+document.getElementById("count").innerText=cart.length;
+document.getElementById("total").innerText=total+delivery;
 }
 
 /* CART */
@@ -132,20 +253,27 @@ function toggleCart(){
 document.getElementById("cart").classList.toggle("active");
 }
 
+/* DELIVERY */
+function selectDelivery(el,price){
+document.querySelectorAll("h3 + .option").forEach(o=>o.classList.remove("active"));
+el.classList.add("active");
+delivery=price;
+updateCart();
+}
+
+/* PAYMENT */
+function selectPayment(el,type){
+document.querySelectorAll("h3 + .option").forEach(o=>o.classList.remove("active"));
+el.classList.add("active");
+payment=type;
+}
+
 /* ORDER */
 function order(){
 let text="ORDER:%0A";
-let save="";
-
 cart.forEach(p=>{
 text+=p.name+" - "+p.price+" Tsh%0A";
-save+=p.name+" - Pending<br>";
 });
-
-orders.push(save);
-
-document.getElementById("history").innerHTML=orders.join("<hr>");
-
 window.open("https://wa.me/255617816758?text="+text);
 }
 
@@ -171,6 +299,36 @@ html+=`
 </div>`;
 });
 document.getElementById("products").innerHTML=html;
+}
+
+/* LANGUAGE */
+function changeLang(lang){
+
+if(lang=="sw"){
+document.getElementById("welcome").innerText="🔥 Karibu Jovan's Corner 🔥";
+document.querySelector(".search input").placeholder="Tafuta viatu...";
+}
+
+if(lang=="en"){
+document.getElementById("welcome").innerText="🔥 Welcome to Jovan's Corner 🔥";
+document.querySelector(".search input").placeholder="Search shoes...";
+}
+
+if(lang=="tr"){
+document.getElementById("welcome").innerText="🔥 Hoşgeldiniz 🔥";
+document.querySelector(".search input").placeholder="Ara...";
+}
+
+if(lang=="zh"){
+document.getElementById("welcome").innerText="🔥 欢迎 🔥";
+document.querySelector(".search input").placeholder="搜索...";
+}
+
+if(lang=="es"){
+document.getElementById("welcome").innerText="🔥 Bienvenido 🔥";
+document.querySelector(".search input").placeholder="Buscar...";
+}
+
 }
 
 </script>
