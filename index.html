@@ -13,7 +13,6 @@ body{
   color:white;
 }
 
-/* HEADER */
 header{
   background:linear-gradient(45deg, red, blue);
   padding:15px;
@@ -45,7 +44,6 @@ header{
   background:#111;
   padding:10px;
   border-radius:15px;
-  box-shadow:0 0 10px rgba(255,0,0,0.3);
 }
 
 .card img{
@@ -57,6 +55,7 @@ header{
   color:yellow;
 }
 
+/* BUTTON */
 .btn{
   background:red;
   border:none;
@@ -66,7 +65,7 @@ header{
   color:white;
 }
 
-/* CART BUTTON */
+/* CART */
 .cart-btn{
   position:fixed;
   top:10px;
@@ -74,20 +73,18 @@ header{
   background:red;
   padding:10px;
   border-radius:50%;
-  border:none;
-  z-index:1000;
 }
 
-/* CART */
 .cart{
   position:fixed;
   top:0;
   right:-100%;
-  width:260px;
+  width:280px;
   height:100%;
   background:black;
   padding:15px;
   transition:0.4s;
+  overflow:auto;
 }
 
 .cart.active{
@@ -96,12 +93,13 @@ header{
 
 .total{
   color:yellow;
+  font-size:18px;
 }
 
-/* ADMIN */
-.admin{
-  padding:10px;
-  background:#111;
+/* QUANTITY */
+.qty button{
+  padding:5px;
+  margin:3px;
 }
 
 /* FOOTER */
@@ -116,7 +114,7 @@ footer{
 
 <body>
 
-<header>🔥 JOVAN'S SHOE STORE 👟</header>
+<header>👟 JOVAN'S SHOE STORE</header>
 
 <button class="cart-btn" onclick="toggleCart()">🛒</button>
 
@@ -140,74 +138,111 @@ footer{
 <button class="btn" onclick="addToCart('Adidas',60000)">Add</button>
 </div>
 
+<div class="card" data-name="Puma">
+<img src="https://picsum.photos/200?3">
+<h3>Puma</h3>
+<p>40000 Tsh</p>
+<button class="btn" onclick="addToCart('Puma',40000)">Add</button>
+</div>
+
 </div>
 
 <!-- CART -->
 <div class="cart" id="cart">
 <h2>🛒 Cart</h2>
+
 <div id="items"></div>
+
+<p>Items: <span id="count">0</span></p>
 <p class="total">Total: <span id="total">0</span> Tsh</p>
-<button class="btn" onclick="checkout()">Pay / Order</button>
-</div>
 
-<!-- ADMIN DASHBOARD -->
-<div class="admin">
-<h2>⚙️ Admin Dashboard</h2>
+<hr>
 
-<input id="name" placeholder="Product name"><br><br>
-<input id="price" placeholder="Price"><br><br>
-<input id="image" placeholder="Image URL"><br><br>
+<h3>🚚 Delivery</h3>
+<select id="delivery">
+<option value="Free">Free</option>
+<option value="5000">City Delivery - 5000 Tsh</option>
+</select>
 
-<button class="btn" onclick="addProduct()">Add Product</button>
+<h3>💳 Payment</h3>
+<select id="payment">
+<option value="M-Pesa">M-Pesa</option>
+<option value="Cash">Cash</option>
+</select>
 
+<button class="btn" onclick="checkout()">Order</button>
 </div>
 
 <footer>© 2026 Jovan's Store 🔥</footer>
 
 <script>
-let cart = [];
+let cart = {};
 let total = 0;
+let count = 0;
 
 function toggleCart(){
   document.getElementById("cart").classList.toggle("active");
 }
 
 function addToCart(name,price){
-  cart.push(name + " - " + price + " Tsh");
-  total += price;
+  if(!cart[name]){
+    cart[name] = {price:price, qty:1};
+  }else{
+    cart[name].qty++;
+  }
+  updateCart();
+}
 
-  document.getElementById("items").innerHTML += "<p>"+name+"</p>";
+function updateCart(){
+  let itemsHTML = "";
+  total = 0;
+  count = 0;
+
+  for(let item in cart){
+    let p = cart[item];
+    total += p.price * p.qty;
+    count += p.qty;
+
+    itemsHTML += `
+    <div>
+      <p>${item} (${p.qty})</p>
+      <div class="qty">
+        <button onclick="changeQty('${item}',-1)">-</button>
+        <button onclick="changeQty('${item}',1)">+</button>
+      </div>
+    </div>
+    `;
+  }
+
+  document.getElementById("items").innerHTML = itemsHTML;
   document.getElementById("total").innerText = total;
+  document.getElementById("count").innerText = count;
+}
+
+function changeQty(name,val){
+  cart[name].qty += val;
+  if(cart[name].qty <= 0){
+    delete cart[name];
+  }
+  updateCart();
 }
 
 function checkout(){
-  let msg = "🛒 ORDER:%0A";
-  cart.forEach(item=>{
-    msg += item + "%0A";
-  });
+  let delivery = document.getElementById("delivery").value;
+  let payment = document.getElementById("payment").value;
 
+  let msg = "🛒 ORDER:%0A";
+
+  for(let item in cart){
+    msg += item + " x" + cart[item].qty + "%0A";
+  }
+
+  msg += "Items: " + count + "%0A";
   msg += "TOTAL: " + total + " Tsh%0A";
-  msg += "PAYMENT: M-Pesa%0A";
-  msg += "Namba: 255617816758";
+  msg += "Delivery: " + delivery + "%0A";
+  msg += "Payment: " + payment;
 
   window.open("https://wa.me/255617816758?text="+msg);
-}
-
-function addProduct(){
-  let name = document.getElementById("name").value;
-  let price = document.getElementById("price").value;
-  let image = document.getElementById("image").value;
-
-  let product = `
-  <div class="card" data-name="${name}">
-  <img src="${image}">
-  <h3>${name}</h3>
-  <p>${price} Tsh</p>
-  <button class="btn" onclick="addToCart('${name}',${price})">Add</button>
-  </div>
-  `;
-
-  document.getElementById("products").innerHTML += product;
 }
 
 function search(value){
@@ -223,4 +258,4 @@ function search(value){
 </script>
 
 </body>
-</html>
+  </html>
