@@ -209,5 +209,21 @@ function checkout(){
   }
 </script>
 
-</body>
+</body>function addProduct(){
+
+  let name = document.getElementById("name").value;
+  let price = document.getElementById("price").value;
+  let image = document.getElementById("image").value;
+
+  let product = `
+  <div class="card">
+  <img src="${image}">
+  <h3>${name}</h3>
+  <p>${price} Tsh</p>
+  <button class="btn" onclick="addToCart('${name}',${price})">Add</button>
+  </div>
+  `;
+
+  document.getElementById("adminProducts").innerHTML += product;
+}
 </html>
