@@ -14,7 +14,7 @@ header{background:linear-gradient(90deg,red,blue);padding:10px}
 .logo{display:flex;gap:10px;align-items:center}
 .logo img{width:35px}
 
-/* MARQUEE */
+/* SLIDE TEXT */
 .marquee{overflow:hidden;white-space:nowrap;animation:slide 10s linear infinite;color:yellow}
 @keyframes slide{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 
@@ -26,12 +26,6 @@ header{background:linear-gradient(90deg,red,blue);padding:10px}
 .card{background:#111;padding:10px;border-radius:15px}
 .card img{width:100%;border-radius:10px}
 .card h3{color:yellow}
-
-/* RATING */
-.stars{color:gold}
-
-/* REVIEWS */
-.review{font-size:12px;color:#ccc;margin-top:5px}
 
 /* BUTTON */
 .btn{background:red;border:none;padding:10px;width:100%;border-radius:10px;color:white}
@@ -56,28 +50,34 @@ header{background:linear-gradient(90deg,red,blue);padding:10px}
 
 <header>
 <div class="top">
+
 <div class="logo">
 <img src="https://cdn-icons-png.flaticon.com/512/892/892458.png">
-<b id="title">JOVAN'S CORNER</b>
+<b>JOVAN'S CORNER</b>
 </div>
 
 <div>
 <select onchange="changeLang(this.value)">
-<option value="sw">🇹🇿</option>
-<option value="en">🇬🇧</option>
+<option value="sw">🇹🇿 Swahili</option>
+<option value="en">🇬🇧 English</option>
+<option value="tr">🇹🇷 Turkish</option>
+<option value="zh">🇨🇳 Chinese</option>
+<option value="es">🇪🇸 Spanish</option>
 </select>
 
 <button onclick="openDashboard()">📊</button>
 </div>
+
 </div>
 
 <div class="marquee" id="welcome">
 🔥 Karibu Jovan's Corner - Viatu bora 🔥
 </div>
+
 </header>
 
 <div class="search">
-<input type="text" placeholder="Tafuta..." onkeyup="searchProduct(this.value)">
+<input type="text" placeholder="Tafuta viatu..." onkeyup="searchProduct(this.value)">
 </div>
 
 <div class="products" id="products"></div>
@@ -112,65 +112,28 @@ header{background:linear-gradient(90deg,red,blue);padding:10px}
 
 <script>
 
-/* PRODUCTS WITH REVIEWS */
-let products=[
-{
-name:"Nike",
-price:50000,
-img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff",
-rating:5,
-reviews:["Nzuri sana 🔥","Quality kali","Nimenunua mara 2"]
-},
-{
-name:"Adidas",
-price:60000,
-img:"https://images.unsplash.com/photo-1528701800489-20be3c5c9f49",
-rating:4,
-reviews:["Comfort sana","Nzuri kwa michezo"]
-},
-{
-name:"Puma",
-price:55000,
-img:"https://images.unsplash.com/photo-1519741497674-611481863552",
-rating:3,
-reviews:["Bei nzuri","Simple design"]
-},
-{
-name:"Jordan",
-price:70000,
-img:"https://images.unsplash.com/photo-1600180758890-6b94519a8ba6",
-rating:5,
-reviews:["Original kabisa","Top quality 🔥"]
+/* PRODUCTS 50+ */
+let products=[];
+for(let i=1;i<=50;i++){
+products.push({
+name:"Shoe "+i,
+price:40000+(i*500),
+img:"https://source.unsplash.com/300x300/?shoes,"+i
+});
 }
-];
 
 let cart=[];
 let delivery=0;
 let payment="mpesa";
 
-/* STARS */
-function getStars(num){
-let s="";
-for(let i=0;i<num;i++) s+="⭐";
-return s;
-}
-
 /* LOAD */
 function loadProducts(){
 let html="";
 products.forEach((p,i)=>{
-
-let rev="";
-p.reviews.forEach(r=>{
-rev+=`<div class="review">💬 ${r}</div>`;
-});
-
 html+=`
 <div class="card">
 <img src="${p.img}">
 <h3>${p.name}</h3>
-<div class="stars">${getStars(p.rating)}</div>
-${rev}
 <p>${p.price} Tsh</p>
 <button class="btn" onclick="add(${i})">Add</button>
 </div>`;
@@ -223,18 +186,10 @@ payment=type;
 /* ORDER */
 function order(){
 let text="ORDER:%0A";
-let save="";
 
 cart.forEach(p=>{
 text+=p.name+" - "+p.price+" Tsh%0A";
-save+=p.name+" - "+p.price+" Tsh<br>";
 });
-
-let history=localStorage.getItem("orders")||"";
-history+="<hr>"+save;
-localStorage.setItem("orders",history);
-
-document.getElementById("history").innerHTML=history;
 
 window.open("https://wa.me/255617816758?text="+text);
 }
@@ -242,13 +197,10 @@ window.open("https://wa.me/255617816758?text="+text);
 /* DASHBOARD */
 function openDashboard(){
 document.getElementById("dashboard").style.display="block";
+document.getElementById("history").innerHTML=cart.map(p=>p.name+" - "+p.price).join("<br>");
 }
 function closeDashboard(){
 document.getElementById("dashboard").style.display="none";
-}
-
-window.onload=function(){
-document.getElementById("history").innerHTML=localStorage.getItem("orders")||"No orders";
 }
 
 /* SEARCH */
@@ -256,18 +208,10 @@ function searchProduct(val){
 let filtered=products.filter(p=>p.name.toLowerCase().includes(val.toLowerCase()));
 let html="";
 filtered.forEach((p,i)=>{
-
-let rev="";
-p.reviews.forEach(r=>{
-rev+=`<div class="review">💬 ${r}</div>`;
-});
-
 html+=`
 <div class="card">
 <img src="${p.img}">
 <h3>${p.name}</h3>
-<div class="stars">${getStars(p.rating)}</div>
-${rev}
 <p>${p.price} Tsh</p>
 <button class="btn" onclick="add(${i})">Add</button>
 </div>`;
@@ -277,14 +221,32 @@ document.getElementById("products").innerHTML=html;
 
 /* LANGUAGE */
 function changeLang(lang){
+
 if(lang=="sw"){
-document.getElementById("welcome").innerText="🔥 Karibu Jovan's Corner 🔥";
-document.querySelector(".search input").placeholder="Tafuta...";
+document.getElementById("welcome").innerText="🔥 Karibu Jovan's Corner - Viatu bora 🔥";
+document.querySelector(".search input").placeholder="Tafuta viatu...";
 }
+
 if(lang=="en"){
-document.getElementById("welcome").innerText="🔥 Welcome to Jovan's Corner 🔥";
-document.querySelector(".search input").placeholder="Search...";
+document.getElementById("welcome").innerText="🔥 Welcome to Jovan's Corner - Best shoes 🔥";
+document.querySelector(".search input").placeholder="Search shoes...";
 }
+
+if(lang=="tr"){
+document.getElementById("welcome").innerText="🔥 Jovan's Corner'a hoş geldiniz 🔥";
+document.querySelector(".search input").placeholder="Ayakkabı ara...";
+}
+
+if(lang=="zh"){
+document.getElementById("welcome").innerText="🔥 欢迎来到 Jovan's Corner 🔥";
+document.querySelector(".search input").placeholder="搜索鞋子...";
+}
+
+if(lang=="es"){
+document.getElementById("welcome").innerText="🔥 Bienvenido a Jovan's Corner 🔥";
+document.querySelector(".search input").placeholder="Buscar zapatos...";
+}
+
 }
 
 </script>
