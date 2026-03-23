@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jovan News Live</title>
+<title>Jovan News Pro+</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#111;color:white}
@@ -12,12 +12,20 @@ header{background:#b80000;padding:12px;text-align:center;font-weight:bold}
 
 .breaking{background:black;color:red;padding:10px;text-align:center}
 
+/* BUTTONS */
+.buttons{display:flex;gap:10px;padding:10px;justify-content:center}
+.buttons button{
+background:#222;color:white;border:none;padding:8px 12px;border-radius:10px;
+}
+
+/* NEWS */
 .news{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
 
 .card{background:#222;border-radius:10px;overflow:hidden}
 .card img{width:100%;height:120px;object-fit:cover}
 .card h3{padding:10px;font-size:14px}
 
+/* FULL */
 .full{position:fixed;top:0;left:0;width:100%;height:100%;background:black;padding:20px;display:none;overflow:auto}
 
 .btn{background:red;color:white;border:none;padding:10px;width:100%;border-radius:10px}
@@ -26,12 +34,19 @@ header{background:#b80000;padding:12px;text-align:center;font-weight:bold}
 </head>
 <body>
 
-<header>📰 JOVAN NEWS LIVE</header>
+<header>📰 JOVAN NEWS PRO+</header>
 
 <div class="breaking">🚨 LIVE GLOBAL NEWS 🌍</div>
 
+<!-- CATEGORY -->
+<div class="buttons">
+<button onclick="loadNews()">🌍 All</button>
+<button onclick="shuffleNews()">🔄 Refresh</button>
+</div>
+
 <div class="news" id="news"></div>
 
+<!-- FULL -->
 <div class="full" id="full">
 <button class="btn" onclick="closeFull()">❌ Close</button>
 <h2 id="title"></h2>
@@ -42,32 +57,45 @@ header{background:#b80000;padding:12px;text-align:center;font-weight:bold}
 
 <script>
 
-/* FREE WORKING API */
+let allNews=[];
+
+/* LOAD NEWS */
+function loadNews(){
 fetch("https://api.spaceflightnewsapi.net/v4/articles/")
 .then(res=>res.json())
 .then(data=>{
 
+allNews=data.results;
+showNews(allNews);
+
+});
+}
+
+/* SHOW */
+function showNews(data){
 let html="";
 
-data.results.slice(0,10).forEach((n,i)=>{
-
+data.slice(0,10).forEach((n,i)=>{
 html+=`
 <div class="card" onclick="openFull(${i})">
 <img src="${n.image_url}">
 <h3>${n.title}</h3>
 </div>
 `;
-
 });
 
-window.newsData=data.results;
 document.getElementById("news").innerHTML=html;
+}
 
-});
+/* SHUFFLE (kubadilisha news) */
+function shuffleNews(){
+allNews.sort(()=>Math.random()-0.5);
+showNews(allNews);
+}
 
 /* OPEN */
 function openFull(i){
-let n=window.newsData[i];
+let n=allNews[i];
 
 document.getElementById("full").style.display="block";
 document.getElementById("title").innerText=n.title;
@@ -80,6 +108,14 @@ document.getElementById("link").href=n.url;
 function closeFull(){
 document.getElementById("full").style.display="none";
 }
+
+/* AUTO LOAD */
+loadNews();
+
+/* AUTO REFRESH */
+setInterval(()=>{
+shuffleNews();
+},30000);
 
 </script>
 
