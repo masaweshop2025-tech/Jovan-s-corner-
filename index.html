@@ -3,46 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jovan News Global</title>
+<title>Jovan Global News</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#111;color:white}
 
-header{background:#b80000;padding:12px;text-align:center;font-weight:bold}
+header{background:#b80000;padding:10px;text-align:center;font-weight:bold}
 
-.breaking{background:black;color:red;padding:10px;text-align:center}
+.breaking{background:black;color:red;padding:8px;text-align:center}
 
-.buttons{display:flex;gap:10px;padding:10px;justify-content:center}
+.topbar{display:flex;justify-content:space-between;padding:10px}
+
+/* BUTTONS */
+.buttons{display:flex;gap:5px;overflow:auto;padding:10px}
 .buttons button{
-background:#222;color:white;border:none;padding:8px 12px;border-radius:10px;
+background:#222;color:white;border:none;padding:6px 10px;border-radius:10px;
 }
 
+/* NEWS */
 .news{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
 
 .card{background:#222;border-radius:10px;overflow:hidden}
 .card img{width:100%;height:120px;object-fit:cover}
-.card h3{padding:10px;font-size:14px}
+.card h3{padding:10px;font-size:13px}
 
+/* FULL */
 .full{position:fixed;top:0;left:0;width:100%;height:100%;background:black;padding:20px;display:none;overflow:auto}
 
-.btn{background:red;color:white;border:none;padding:10px;width:100%;border-radius:10px}
+.btn{background:red;color:white;border:none;padding:10px;width:100%;border-radius:10px;margin-top:10px}
 </style>
 
 </head>
 <body>
 
-<header>📰 JOVAN GLOBAL NEWS</header>
+<header id="titleText">📰 JOVAN GLOBAL NEWS</header>
 
-<div class="breaking">🌍 LIVE WORLD NEWS (API KEY)</div>
+<div class="breaking" id="breaking">🚨 LIVE NEWS 🌍</div>
+
+<div class="topbar">
+<select onchange="changeLang(this.value)">
+<option value="en">English</option>
+<option value="sw">Swahili</option>
+<option value="fr">French</option>
+<option value="zh">Chinese</option>
+<option value="tr">Turkish</option>
+</select>
+</div>
 
 <div class="buttons">
 <button onclick="loadNews('general')">🌍 World</button>
 <button onclick="loadNews('sports')">⚽ Sports</button>
 <button onclick="loadNews('technology')">💻 Tech</button>
 <button onclick="loadNews('business')">💰 Business</button>
+<button onclick="loadTz()">🇹🇿 Tanzania</button>
 </div>
 
-<p id="loading" style="text-align:center;color:yellow">⏳ Inapakia habari...</p>
+<p id="loading" style="text-align:center;color:yellow">⏳ Loading news...</p>
 
 <div class="news" id="news"></div>
 
@@ -51,38 +67,44 @@ background:#222;color:white;border:none;padding:8px 12px;border-radius:10px;
 <h2 id="title"></h2>
 <img id="image" style="width:100%">
 <p id="content"></p>
-<a id="link" target="_blank" style="color:yellow">👉 Soma zaidi</a>
+<a id="link" target="_blank" style="color:yellow">👉 Read more</a>
 </div>
 
 <script>
 
 let API_KEY="b6ae304ceec443eb9b9ef709906bde7b";
 let allNews=[];
+let currentLang="en";
 
-function loadNews(category="general"){
+/* LOAD GLOBAL */
+function loadNews(cat="general"){
 
-document.getElementById("loading").style.display="block";
-
-let url=`https://newsapi.org/v2/top-headlines?country=us&category=${category}&pageSize=6&apiKey=${API_KEY}`;
+let url=`https://newsapi.org/v2/top-headlines?country=us&category=${cat}&pageSize=6&apiKey=${API_KEY}`;
 
 fetch("https://corsproxy.io/?"+encodeURIComponent(url))
-.then(res=>res.json())
-.then(data=>{
-
-document.getElementById("loading").style.display="none";
-
-allNews=data.articles;
-
+.then(r=>r.json())
+.then(d=>{
+allNews=d.articles;
 showNews(allNews);
-
-})
-.catch(err=>{
-document.getElementById("loading").innerText="❌ Imeshindikana kupakia news";
-console.log(err);
+document.getElementById("loading").style.display="none";
 });
-
 }
 
+/* TANZANIA */
+function loadTz(){
+
+let url=`https://newsapi.org/v2/everything?q=Tanzania&sortBy=publishedAt&apiKey=${API_KEY}`;
+
+fetch("https://corsproxy.io/?"+encodeURIComponent(url))
+.then(r=>r.json())
+.then(d=>{
+allNews=d.articles;
+showNews(allNews);
+document.getElementById("loading").style.display="none";
+});
+}
+
+/* SHOW */
 function showNews(data){
 let html="";
 data.forEach((n,i)=>{
@@ -96,27 +118,59 @@ html+=`
 document.getElementById("news").innerHTML=html;
 }
 
+/* OPEN */
 function openFull(i){
 let n=allNews[i];
 
 document.getElementById("full").style.display="block";
 document.getElementById("title").innerText=n.title;
 document.getElementById("image").src=n.urlToImage;
-document.getElementById("content").innerText=n.description || "No info";
+document.getElementById("content").innerText=n.description;
 document.getElementById("link").href=n.url;
 }
 
+/* CLOSE */
 function closeFull(){
 document.getElementById("full").style.display="none";
 }
 
-/* AUTO LOAD */
-loadNews();
+/* LANGUAGE */
+function changeLang(lang){
+currentLang=lang;
 
-/* AUTO REFRESH */
+if(lang=="sw"){
+document.getElementById("titleText").innerText="📰 HABARI ZA DUNIA";
+document.getElementById("breaking").innerText="🚨 HABARI MPYA";
+}
+
+if(lang=="en"){
+document.getElementById("titleText").innerText="📰 JOVAN GLOBAL NEWS";
+document.getElementById("breaking").innerText="🚨 LIVE NEWS";
+}
+
+if(lang=="fr"){
+document.getElementById("titleText").innerText="📰 ACTUALITÉS";
+document.getElementById("breaking").innerText="🚨 DERNIÈRES NOUVELLES";
+}
+
+if(lang=="zh"){
+document.getElementById("titleText").innerText="📰 新闻";
+document.getElementById("breaking").innerText="🚨 最新消息";
+}
+
+if(lang=="tr"){
+document.getElementById("titleText").innerText="📰 HABERLER";
+document.getElementById("breaking").innerText="🚨 SON DAKİKA";
+}
+}
+
+/* AUTO REFRESH (30 sec) */
 setInterval(()=>{
 loadNews();
-},60000);
+},30000);
+
+/* START */
+loadNews();
 
 </script>
 
