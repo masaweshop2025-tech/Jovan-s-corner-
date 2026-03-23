@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jovan News Pro+</title>
+<title>Jovan News Global</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#111;color:white}
@@ -12,20 +12,17 @@ header{background:#b80000;padding:12px;text-align:center;font-weight:bold}
 
 .breaking{background:black;color:red;padding:10px;text-align:center}
 
-/* BUTTONS */
 .buttons{display:flex;gap:10px;padding:10px;justify-content:center}
 .buttons button{
 background:#222;color:white;border:none;padding:8px 12px;border-radius:10px;
 }
 
-/* NEWS */
 .news{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
 
 .card{background:#222;border-radius:10px;overflow:hidden}
 .card img{width:100%;height:120px;object-fit:cover}
 .card h3{padding:10px;font-size:14px}
 
-/* FULL */
 .full{position:fixed;top:0;left:0;width:100%;height:100%;background:black;padding:20px;display:none;overflow:auto}
 
 .btn{background:red;color:white;border:none;padding:10px;width:100%;border-radius:10px}
@@ -34,19 +31,21 @@ background:#222;color:white;border:none;padding:8px 12px;border-radius:10px;
 </head>
 <body>
 
-<header>📰 JOVAN NEWS PRO+</header>
+<header>📰 JOVAN GLOBAL NEWS</header>
 
-<div class="breaking">🚨 LIVE GLOBAL NEWS 🌍</div>
+<div class="breaking">🌍 LIVE WORLD NEWS (API KEY)</div>
 
-<!-- CATEGORY -->
 <div class="buttons">
-<button onclick="loadNews()">🌍 All</button>
-<button onclick="shuffleNews()">🔄 Refresh</button>
+<button onclick="loadNews('general')">🌍 World</button>
+<button onclick="loadNews('sports')">⚽ Sports</button>
+<button onclick="loadNews('technology')">💻 Tech</button>
+<button onclick="loadNews('business')">💰 Business</button>
 </div>
+
+<p id="loading" style="text-align:center;color:yellow">⏳ Inapakia habari...</p>
 
 <div class="news" id="news"></div>
 
-<!-- FULL -->
 <div class="full" id="full">
 <button class="btn" onclick="closeFull()">❌ Close</button>
 <h2 id="title"></h2>
@@ -57,54 +56,56 @@ background:#222;color:white;border:none;padding:8px 12px;border-radius:10px;
 
 <script>
 
+let API_KEY="b6ae304ceec443eb9b9ef709906bde7b";
 let allNews=[];
 
-/* LOAD NEWS */
-function loadNews(){
-fetch("https://api.spaceflightnewsapi.net/v4/articles/")
+function loadNews(category="general"){
+
+document.getElementById("loading").style.display="block";
+
+let url=`https://newsapi.org/v2/top-headlines?country=us&category=${category}&pageSize=6&apiKey=${API_KEY}`;
+
+fetch("https://corsproxy.io/?"+encodeURIComponent(url))
 .then(res=>res.json())
 .then(data=>{
 
-allNews=data.results;
+document.getElementById("loading").style.display="none";
+
+allNews=data.articles;
+
 showNews(allNews);
 
+})
+.catch(err=>{
+document.getElementById("loading").innerText="❌ Imeshindikana kupakia news";
+console.log(err);
 });
+
 }
 
-/* SHOW */
 function showNews(data){
 let html="";
-
-data.slice(0,10).forEach((n,i)=>{
+data.forEach((n,i)=>{
 html+=`
 <div class="card" onclick="openFull(${i})">
-<img src="${n.image_url}">
+<img src="${n.urlToImage || 'https://via.placeholder.com/300'}">
 <h3>${n.title}</h3>
 </div>
 `;
 });
-
 document.getElementById("news").innerHTML=html;
 }
 
-/* SHUFFLE (kubadilisha news) */
-function shuffleNews(){
-allNews.sort(()=>Math.random()-0.5);
-showNews(allNews);
-}
-
-/* OPEN */
 function openFull(i){
 let n=allNews[i];
 
 document.getElementById("full").style.display="block";
 document.getElementById("title").innerText=n.title;
-document.getElementById("image").src=n.image_url;
-document.getElementById("content").innerText=n.summary;
+document.getElementById("image").src=n.urlToImage;
+document.getElementById("content").innerText=n.description || "No info";
 document.getElementById("link").href=n.url;
 }
 
-/* CLOSE */
 function closeFull(){
 document.getElementById("full").style.display="none";
 }
@@ -114,8 +115,8 @@ loadNews();
 
 /* AUTO REFRESH */
 setInterval(()=>{
-shuffleNews();
-},30000);
+loadNews();
+},60000);
 
 </script>
 
