@@ -371,6 +371,89 @@ document.getElementById("userInput").value="";
 chat.scrollTop = chat.scrollHeight;
 }
 
-</script>
+</script>let ordersData=[];
+
+function order(){
+
+let total=0;
+let list="";
+
+cart.forEach(p=>{
+total+=p.price;
+list+=p.name+" - "+p.price+" Tsh<br>";
+});
+
+ordersData.push({total:total,items:list});
+
+updateBiz();
+
+let text="ORDER:%0A"+list;
+window.open("https://wa.me/255617816758?text="+text);
+
+cart=[];
+updateCart();
+}
+
+function updateBiz(){
+
+document.getElementById("totalOrders").innerText=ordersData.length;
+
+let money=0;
+let html="";
+
+ordersData.forEach(o=>{
+money+=o.total;
+html+=`<div style="border-bottom:1px solid gray;padding:5px;">
+${o.items}<b>${o.total} Tsh</b></div>`;
+});
+
+document.getElementById("totalMoney").innerText=money;
+document.getElementById("orderList").innerHTML=html;
+}
+
+function openBiz(){
+document.getElementById("bizDashboard").style.display="block";
+}
+
+function closeBiz(){
+document.getElementById("bizDashboard").style.display="none";
+}
+<!-- BUSINESS DASHBOARD -->
+<div id="bizDashboard" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+color:white;
+padding:20px;
+display:none;
+overflow:auto;
+z-index:999;
+">
+
+<h2>📊 Business Dashboard 
+<span onclick="closeBiz()" style="float:right;cursor:pointer">❌</span>
+</h2>
+
+<p>🛒 Orders: <span id="totalOrders">0</span></p>
+<p>💰 Revenue: <span id="totalMoney">0</span> Tsh</p>
+
+<h3>📦 Order List</h3>
+<div id="orderList"></div>
+
+</div>
+
+<button onclick="openBiz()" style="
+position:fixed;
+bottom:90px;
+right:20px;
+background:blue;
+color:white;
+padding:12px;
+border:none;
+border-radius:50px;
+">📊</button>
 </body>
 </html>
