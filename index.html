@@ -332,6 +332,45 @@ document.querySelector(".search input").placeholder="Buscar...";
 }
 
 </script>
+<!-- CHATBOT -->
+<div id="chatbot" style="position:fixed;bottom:20px;left:20px;width:250px;background:#111;padding:10px;border-radius:10px;">
+<h4>🤖 Chat Bot</h4>
 
+<div id="chatBox" style="height:150px;overflow:auto;font-size:14px;"></div>
+
+<input type="text" id="userInput" placeholder="Andika hapa..." style="width:100%;padding:5px;">
+<button onclick="sendMsg()" style="width:100%;margin-top:5px;">Send</button>
+</div>
+
+<script>
+
+function sendMsg(){
+let input=document.getElementById("userInput").value.toLowerCase();
+let chat=document.getElementById("chatBox");
+
+chat.innerHTML += "<p>👤 "+input+"</p>";
+
+let reply="Sijaelewa 🤔";
+
+if(input.includes("bei")){
+reply="Bei zetu zinaanzia 40,000 Tsh 👟";
+}
+else if(input.includes("order")){
+reply="Bonyeza Add kisha Cart ku-order 🛒";
+}
+else if(input.includes("hello") || input.includes("hi")){
+reply="Karibu sana Jovan's Corner 🔥";
+}
+else if(input.includes("delivery")){
+reply="Delivery ni free au 5000 Tsh 🚚";
+}
+
+chat.innerHTML += "<p>🤖 "+reply+"</p>";
+
+document.getElementById("userInput").value="";
+chat.scrollTop = chat.scrollHeight;
+}
+
+</script>
 </body>
 </html>
