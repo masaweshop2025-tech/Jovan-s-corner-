@@ -3,233 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jovan's Corner</title>
+<title>Jovan Game</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#0a0a0a;color:white}
+body{margin:0;background:black;color:white;text-align:center;font-family:sans-serif}
 
-/* HEADER */
-header{background:linear-gradient(90deg,red,blue);padding:10px}
-.top{display:flex;justify-content:space-between}
-.marquee{animation:slide 10s linear infinite;white-space:nowrap;color:yellow}
-@keyframes slide{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+#game{
+position:relative;
+width:100%;
+height:300px;
+background:#111;
+overflow:hidden;
+margin-top:20px;
+}
 
-/* SEARCH */
-.search input{width:100%;padding:10px;border-radius:20px;border:none}
+#player{
+position:absolute;
+bottom:0;
+left:50px;
+width:60px;
+height:60px;
+background-size:cover;
+border-radius:50%;
+}
 
-/* PRODUCTS */
-.products{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
-.card{background:#111;padding:10px;border-radius:10px}
-.card img{width:100%;border-radius:10px}
-.btn{background:red;color:white;border:none;padding:10px;width:100%;border-radius:10px}
+#obstacle{
+position:absolute;
+bottom:0;
+right:-50px;
+width:40px;
+height:40px;
+background:red;
+}
 
-/* CART */
-.cart{position:fixed;right:-100%;top:0;width:300px;height:100%;background:black;padding:15px;transition:0.3s}
-.cart.active{right:0}
-
-/* DASHBOARD */
-#bizDashboard{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;padding:20px;overflow:auto}
-
-/* FLOAT */
-.float{position:fixed;top:10px;right:10px;background:red;padding:10px;border-radius:50%}
-.whatsapp{position:fixed;bottom:20px;right:20px;background:green;padding:15px;border-radius:50px;text-decoration:none;color:white}
+button{padding:10px;margin:5px}
 </style>
 
 </head>
 <body>
 
-<header>
-<div class="top">
-<b>JOVAN'S CORNER</b>
-<button onclick="openBiz()">📊</button>
-</div>
-<div class="marquee">🔥 Karibu Jovan's Corner - Best Shoes 🔥</div>
-</header>
+<h2>🎮 Jovan vs Rafiki</h2>
 
-<div class="search">
-<input type="text" placeholder="Search shoes..." onkeyup="searchProduct(this.value)">
+<button onclick="selectPlayer('me.jpg')">Wewe</button>
+<button onclick="selectPlayer('friend.jpg')">Rafiki</button>
+
+<div id="game">
+<div id="player"></div>
+<div id="obstacle"></div>
 </div>
 
-<div class="products" id="products"></div>
-
-<!-- CART -->
-<div class="cart" id="cart">
-<h2>🛒 Cart <span onclick="toggleCart()">❌</span></h2>
-
-<div id="cartItems"></div>
-
-<p>Items: <span id="count">0</span></p>
-<p>Total: <span id="total">0</span> Tsh</p>
-
-<h3>Delivery</h3>
-<select onchange="delivery=this.value;updateCart()">
-<option value="0">Free</option>
-<option value="5000">City 5000</option>
-</select>
-
-<h3>Payment</h3>
-<select onchange="payment=this.value">
-<option value="mpesa">M-Pesa</option>
-<option value="cash">Cash</option>
-</select>
-
-<button class="btn" onclick="order()">Order</button>
-</div>
-
-<!-- DASHBOARD -->
-<div id="bizDashboard">
-<h2>📊 Business Dashboard <span onclick="closeBiz()">❌</span></h2>
-
-<p>Orders: <span id="totalOrders">0</span></p>
-<p>Money: <span id="totalMoney">0</span> Tsh</p>
-
-<div id="orderList"></div>
-</div>
-
-<!-- CHATBOT -->
-<div style="position:fixed;bottom:20px;left:20px;width:220px;background:#111;padding:10px;border-radius:10px;">
-<h4>🤖 Bot</h4>
-<div id="chatBox" style="height:100px;overflow:auto;font-size:12px"></div>
-<input id="userInput" placeholder="andika..." style="width:100%">
-<button onclick="sendMsg()">Send</button>
-</div>
-
-<button class="float" onclick="toggleCart()">🛒</button>
-<a href="https://wa.me/255617816758" class="whatsapp">💬</a>
+<h3>Score: <span id="score">0</span></h3>
 
 <script>
 
-/* PRODUCTS */
-let products=[
-{name:"Nike Air Max",price:50000,img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"},
-{name:"Adidas Ultraboost",price:65000,img:"https://images.unsplash.com/photo-1528701800489-20be3c5c9f49"},
-{name:"Puma RS-X",price:55000,img:"https://images.unsplash.com/photo-1519741497674-611481863552"},
-{name:"Jordan Retro",price:75000,img:"https://images.unsplash.com/photo-1600180758890-6b94519a8ba6"}
-];
+let player=document.getElementById("player");
+let obstacle=document.getElementById("obstacle");
 
-let cart=[];
-let delivery=0;
-let payment="mpesa";
-let ordersData=[];
+let jumping=false;
+let score=0;
 
-/* LOAD */
-function loadProducts(){
-let html="";
-products.forEach((p,i)=>{
-html+=`
-<div class="card">
-<img src="${p.img}">
-<h3>${p.name}</h3>
-<p>${p.price} Tsh</p>
-<button class="btn" onclick="add(${i})">Add</button>
-</div>`;
-});
-document.getElementById("products").innerHTML=html;
-}
-loadProducts();
-
-/* CART */
-function add(i){
-cart.push(products[i]);
-updateCart();
+/* SELECT PLAYER */
+function selectPlayer(img){
+player.style.backgroundImage="url("+img+")";
 }
 
-function updateCart(){
-let html="";
-let total=0;
+/* JUMP */
+document.addEventListener("click",()=>{
+if(!jumping){
+jumping=true;
+let up=0;
 
-cart.forEach(p=>{
-total+=p.price;
-html+=`<p>${p.name}</p>`;
+let jump=setInterval(()=>{
+up+=5;
+player.style.bottom=up+"px";
+
+if(up>=100){
+clearInterval(jump);
+
+let down=setInterval(()=>{
+up-=5;
+player.style.bottom=up+"px";
+
+if(up<=0){
+clearInterval(down);
+jumping=false;
+}
+
+},20);
+
+}
+
+},20);
+
+}
 });
 
-document.getElementById("cartItems").innerHTML=html;
-document.getElementById("count").innerText=cart.length;
-document.getElementById("total").innerText=total + Number(delivery);
+/* OBSTACLE MOVE */
+function moveObstacle(){
+let pos=window.innerWidth;
+
+let move=setInterval(()=>{
+pos-=5;
+obstacle.style.right=(window.innerWidth-pos)+"px";
+
+let playerBottom=parseInt(player.style.bottom)||0;
+
+if(pos<100 && playerBottom<40){
+alert("💀 Game Over");
+location.reload();
 }
 
-function toggleCart(){
-document.getElementById("cart").classList.toggle("active");
+if(pos<0){
+pos=window.innerWidth;
+score++;
+document.getElementById("score").innerText=score;
 }
 
-/* ORDER */
-function order(){
-let total=0;
-let list="";
-
-cart.forEach(p=>{
-total+=p.price;
-list+=p.name+" - "+p.price+" Tsh<br>";
-});
-
-ordersData.push({total:total,items:list});
-updateBiz();
-
-let text="ORDER:%0A"+list;
-window.open("https://wa.me/255617816758?text="+text);
-
-cart=[];
-updateCart();
+},20);
 }
 
-/* DASHBOARD */
-function updateBiz(){
-document.getElementById("totalOrders").innerText=ordersData.length;
-
-let money=0;
-let html="";
-
-ordersData.forEach(o=>{
-money+=o.total;
-html+=`<div>${o.items}<b>${o.total} Tsh</b></div>`;
-});
-
-document.getElementById("totalMoney").innerText=money;
-document.getElementById("orderList").innerHTML=html;
-}
-
-function openBiz(){
-document.getElementById("bizDashboard").style.display="block";
-}
-
-function closeBiz(){
-document.getElementById("bizDashboard").style.display="none";
-}
-
-/* SEARCH */
-function searchProduct(val){
-let filtered=products.filter(p=>p.name.toLowerCase().includes(val.toLowerCase()));
-let html="";
-filtered.forEach((p,i)=>{
-html+=`
-<div class="card">
-<img src="${p.img}">
-<h3>${p.name}</h3>
-<p>${p.price} Tsh</p>
-<button class="btn" onclick="add(${i})">Add</button>
-</div>`;
-});
-document.getElementById("products").innerHTML=html;
-}
-
-/* CHATBOT */
-function sendMsg(){
-let input=document.getElementById("userInput").value.toLowerCase();
-let chat=document.getElementById("chatBox");
-
-chat.innerHTML += "<p>👤 "+input+"</p>";
-
-let reply="Sijaelewa";
-
-if(input.includes("bei")) reply="Bei zinaanzia 40,000 Tsh";
-if(input.includes("hello")) reply="Karibu Jovan's Corner";
-if(input.includes("delivery")) reply="Delivery free au 5000";
-
-chat.innerHTML += "<p>🤖 "+reply+"</p>";
-
-document.getElementById("userInput").value="";
-chat.scrollTop = chat.scrollHeight;
-}
+moveObstacle();
 
 </script>
 
