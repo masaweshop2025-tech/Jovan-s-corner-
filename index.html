@@ -3,26 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jovan Global News</title>
+<title>Jovan News Ultimate</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#111;color:white}
 
+/* HEADER */
 header{background:#b80000;padding:10px;text-align:center;font-weight:bold}
 
+/* BREAKING */
 .breaking{background:black;color:red;padding:8px;text-align:center}
 
+/* TOP */
 .topbar{display:flex;justify-content:space-between;padding:10px}
 
 /* BUTTONS */
-.buttons{display:flex;gap:5px;overflow:auto;padding:10px}
-.buttons button{
-background:#222;color:white;border:none;padding:6px 10px;border-radius:10px;
-}
+.buttons{display:flex;gap:5px;padding:10px;overflow:auto}
+.buttons button{background:#222;color:white;border:none;padding:6px 10px;border-radius:10px}
+
+/* SEARCH */
+.search input{width:100%;padding:10px;border-radius:20px;border:none}
 
 /* NEWS */
 .news{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
-
 .card{background:#222;border-radius:10px;overflow:hidden}
 .card img{width:100%;height:120px;object-fit:cover}
 .card h3{padding:10px;font-size:13px}
@@ -36,7 +39,7 @@ background:#222;color:white;border:none;padding:6px 10px;border-radius:10px;
 </head>
 <body>
 
-<header id="titleText">📰 JOVAN GLOBAL NEWS</header>
+<header id="titleText">📰 JOVAN NEWS ULTIMATE</header>
 
 <div class="breaking" id="breaking">🚨 LIVE NEWS 🌍</div>
 
@@ -58,29 +61,39 @@ background:#222;color:white;border:none;padding:6px 10px;border-radius:10px;
 <button onclick="loadTz()">🇹🇿 Tanzania</button>
 </div>
 
-<p id="loading" style="text-align:center;color:yellow">⏳ Loading news...</p>
+<div class="search">
+<input type="text" placeholder="Search..." onkeyup="searchNews(this.value)">
+</div>
+
+<p id="loading" style="text-align:center;color:yellow">⏳ Loading...</p>
 
 <div class="news" id="news"></div>
 
+<!-- FULL -->
 <div class="full" id="full">
 <button class="btn" onclick="closeFull()">❌ Close</button>
 <h2 id="title"></h2>
 <img id="image" style="width:100%">
 <p id="content"></p>
-<a id="link" target="_blank" style="color:yellow">👉 Read more</a>
+
+<button class="btn" onclick="speakNews()">🔊 Read</button>
+<button class="btn" onclick="saveNews()">⭐ Save</button>
+
+<input id="commentInput" placeholder="Write comment..." style="width:100%;padding:10px;margin-top:10px">
+<button class="btn" onclick="addComment()">💬 Comment</button>
+
+<div id="comments"></div>
 </div>
 
 <script>
 
 let API_KEY="b6ae304ceec443eb9b9ef709906bde7b";
 let allNews=[];
-let currentLang="en";
+let currentNews=null;
 
-/* LOAD GLOBAL */
+/* LOAD NEWS */
 function loadNews(cat="general"){
-
 let url=`https://newsapi.org/v2/top-headlines?country=us&category=${cat}&pageSize=6&apiKey=${API_KEY}`;
-
 fetch("https://corsproxy.io/?"+encodeURIComponent(url))
 .then(r=>r.json())
 .then(d=>{
@@ -92,15 +105,12 @@ document.getElementById("loading").style.display="none";
 
 /* TANZANIA */
 function loadTz(){
-
 let url=`https://newsapi.org/v2/everything?q=Tanzania&sortBy=publishedAt&apiKey=${API_KEY}`;
-
 fetch("https://corsproxy.io/?"+encodeURIComponent(url))
 .then(r=>r.json())
 .then(d=>{
 allNews=d.articles;
 showNews(allNews);
-document.getElementById("loading").style.display="none";
 });
 }
 
@@ -118,15 +128,25 @@ html+=`
 document.getElementById("news").innerHTML=html;
 }
 
+/* SEARCH */
+function searchNews(val){
+let f=allNews.filter(n=>n.title.toLowerCase().includes(val.toLowerCase()));
+showNews(f);
+}
+
 /* OPEN */
 function openFull(i){
 let n=allNews[i];
+currentNews=n;
 
 document.getElementById("full").style.display="block";
 document.getElementById("title").innerText=n.title;
 document.getElementById("image").src=n.urlToImage;
-document.getElementById("content").innerText=n.description;
-document.getElementById("link").href=n.url;
+
+let text=n.content || n.description || "No full content";
+document.getElementById("content").innerText=text;
+
+loadComments();
 }
 
 /* CLOSE */
@@ -134,37 +154,51 @@ function closeFull(){
 document.getElementById("full").style.display="none";
 }
 
-/* LANGUAGE */
-function changeLang(lang){
-currentLang=lang;
+/* VOICE */
+function speakNews(){
+let msg=new SpeechSynthesisUtterance(currentNews.title + ". " + (currentNews.description||""));
+speechSynthesis.speak(msg);
+}
 
-if(lang=="sw"){
-document.getElementById("titleText").innerText="📰 HABARI ZA DUNIA";
+/* SAVE */
+function saveNews(){
+let saved=JSON.parse(localStorage.getItem("saved")||"[]");
+saved.push(currentNews);
+localStorage.setItem("saved",JSON.stringify(saved));
+alert("Saved!");
+}
+
+/* COMMENTS */
+function addComment(){
+let text=document.getElementById("commentInput").value;
+let comments=JSON.parse(localStorage.getItem("comments")||"[]");
+comments.push(text);
+localStorage.setItem("comments",JSON.stringify(comments));
+loadComments();
+}
+
+function loadComments(){
+let comments=JSON.parse(localStorage.getItem("comments")||"[]");
+let html="";
+comments.forEach(c=>{
+html+=`<p>💬 ${c}</p>`;
+});
+document.getElementById("comments").innerHTML=html;
+}
+
+/* LANGUAGE */
+function changeLang(l){
+if(l=="sw"){
+document.getElementById("titleText").innerText="📰 HABARI";
 document.getElementById("breaking").innerText="🚨 HABARI MPYA";
 }
-
-if(lang=="en"){
-document.getElementById("titleText").innerText="📰 JOVAN GLOBAL NEWS";
+if(l=="en"){
+document.getElementById("titleText").innerText="📰 JOVAN NEWS";
 document.getElementById("breaking").innerText="🚨 LIVE NEWS";
 }
-
-if(lang=="fr"){
-document.getElementById("titleText").innerText="📰 ACTUALITÉS";
-document.getElementById("breaking").innerText="🚨 DERNIÈRES NOUVELLES";
 }
 
-if(lang=="zh"){
-document.getElementById("titleText").innerText="📰 新闻";
-document.getElementById("breaking").innerText="🚨 最新消息";
-}
-
-if(lang=="tr"){
-document.getElementById("titleText").innerText="📰 HABERLER";
-document.getElementById("breaking").innerText="🚨 SON DAKİKA";
-}
-}
-
-/* AUTO REFRESH (30 sec) */
+/* AUTO REFRESH */
 setInterval(()=>{
 loadNews();
 },30000);
