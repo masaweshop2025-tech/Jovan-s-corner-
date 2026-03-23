@@ -3,126 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jovan Game</title>
+<title>Jovan News</title>
 
 <style>
-body{margin:0;background:black;color:white;text-align:center;font-family:sans-serif}
+body{margin:0;font-family:Arial;background:#111;color:white}
 
-#game{
-position:relative;
-width:100%;
-height:300px;
-background:#111;
-overflow:hidden;
-margin-top:20px;
-}
+/* HEADER */
+header{background:#b80000;padding:10px;display:flex;justify-content:space-between}
+header h1{margin:0}
+nav a{margin:10px;color:white;text-decoration:none;font-weight:bold}
 
-#player{
-position:absolute;
-bottom:0;
-left:50px;
-width:60px;
-height:60px;
-background-size:cover;
-border-radius:50%;
-}
+/* BREAKING */
+.breaking{background:black;color:red;padding:10px;font-weight:bold}
 
-#obstacle{
-position:absolute;
-bottom:0;
-right:-50px;
-width:40px;
-height:40px;
-background:red;
-}
+/* GRID */
+.news{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
+.card{background:#222;border-radius:10px;overflow:hidden}
+.card img{width:100%}
+.card h3{padding:10px}
 
-button{padding:10px;margin:5px}
+/* FULL VIEW */
+.full{position:fixed;top:0;left:0;width:100%;height:100%;background:black;padding:20px;display:none;overflow:auto}
 </style>
 
 </head>
 <body>
 
-<h2>🎮 Jovan vs Rafiki</h2>
+<header>
+<h1>📰 JOVAN NEWS</h1>
+<nav>
+<a href="#">Home</a>
+<a href="#">Sports</a>
+<a href="#">World</a>
+</nav>
+</header>
 
-<button onclick="selectPlayer('me.jpg')">Wewe</button>
-<button onclick="selectPlayer('friend.jpg')">Rafiki</button>
+<div class="breaking">🚨 BREAKING NEWS: Karibu Jovan News 🔥</div>
 
-<div id="game">
-<div id="player"></div>
-<div id="obstacle"></div>
+<div class="news" id="news"></div>
+
+<!-- FULL ARTICLE -->
+<div class="full" id="full">
+<button onclick="closeFull()">❌ Close</button>
+<h2 id="title"></h2>
+<img id="image" style="width:100%">
+<p id="content"></p>
 </div>
-
-<h3>Score: <span id="score">0</span></h3>
 
 <script>
 
-let player=document.getElementById("player");
-let obstacle=document.getElementById("obstacle");
-
-let jumping=false;
-let score=0;
-
-/* SELECT PLAYER */
-function selectPlayer(img){
-player.style.backgroundImage="url("+img+")";
+let newsData=[
+{
+title:"🔥 Serikali yatangaza mabadiliko makubwa",
+img:"https://images.unsplash.com/photo-1504711434969-e33886168f5c",
+content:"Hii ni habari kamili kuhusu serikali..."
+},
+{
+title:"⚽ Simba yashinda 3-0",
+img:"https://images.unsplash.com/photo-1508098682722-e99c643e7485",
+content:"Simba imefanikiwa kushinda..."
+},
+{
+title:"🌍 Dunia yaingia kwenye teknolojia mpya",
+img:"https://images.unsplash.com/photo-1518779578993-ec3579fee39f",
+content:"Teknolojia mpya imeanza..."
+},
+{
+title:"🎬 Movie mpya yatoka",
+img:"https://images.unsplash.com/photo-1517602302552-471fe67acf66",
+content:"Movie mpya imevuma sana..."
 }
+];
 
-/* JUMP */
-document.addEventListener("click",()=>{
-if(!jumping){
-jumping=true;
-let up=0;
-
-let jump=setInterval(()=>{
-up+=5;
-player.style.bottom=up+"px";
-
-if(up>=100){
-clearInterval(jump);
-
-let down=setInterval(()=>{
-up-=5;
-player.style.bottom=up+"px";
-
-if(up<=0){
-clearInterval(down);
-jumping=false;
-}
-
-},20);
-
-}
-
-},20);
-
-}
+/* LOAD NEWS */
+function loadNews(){
+let html="";
+newsData.forEach((n,i)=>{
+html+=`
+<div class="card" onclick="openFull(${i})">
+<img src="${n.img}">
+<h3>${n.title}</h3>
+</div>`;
 });
+document.getElementById("news").innerHTML=html;
+}
+loadNews();
 
-/* OBSTACLE MOVE */
-function moveObstacle(){
-let pos=window.innerWidth;
-
-let move=setInterval(()=>{
-pos-=5;
-obstacle.style.right=(window.innerWidth-pos)+"px";
-
-let playerBottom=parseInt(player.style.bottom)||0;
-
-if(pos<100 && playerBottom<40){
-alert("💀 Game Over");
-location.reload();
+/* OPEN FULL */
+function openFull(i){
+document.getElementById("full").style.display="block";
+document.getElementById("title").innerText=newsData[i].title;
+document.getElementById("image").src=newsData[i].img;
+document.getElementById("content").innerText=newsData[i].content;
 }
 
-if(pos<0){
-pos=window.innerWidth;
-score++;
-document.getElementById("score").innerText=score;
+function closeFull(){
+document.getElementById("full").style.display="none";
 }
-
-},20);
-}
-
-moveObstacle();
 
 </script>
 
