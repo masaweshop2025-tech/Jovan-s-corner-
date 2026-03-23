@@ -3,135 +3,76 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jovan News Pro</title>
+<title>Jovan News Live</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#111;color:white}
 
-/* HEADER */
 header{background:#b80000;padding:12px;text-align:center;font-weight:bold}
 
-/* BREAKING */
-.breaking{background:black;color:red;padding:10px;font-weight:bold;text-align:center}
+.breaking{background:black;color:red;padding:10px;text-align:center}
 
-/* BUTTONS */
-.buttons{display:flex;gap:5px;padding:10px;overflow:auto}
-.buttons button{
-background:#222;color:white;border:none;padding:8px;border-radius:8px;cursor:pointer;
-}
-
-/* SEARCH */
-.search{padding:10px}
-.search input{width:100%;padding:10px;border-radius:20px;border:none}
-
-/* LOADING */
-#loading{text-align:center;padding:20px;color:yellow}
-
-/* NEWS */
 .news{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
-.card{background:#222;border-radius:10px;overflow:hidden;cursor:pointer}
+
+.card{background:#222;border-radius:10px;overflow:hidden}
 .card img{width:100%;height:120px;object-fit:cover}
 .card h3{padding:10px;font-size:14px}
 
-/* FULL */
 .full{position:fixed;top:0;left:0;width:100%;height:100%;background:black;padding:20px;display:none;overflow:auto}
-.full img{width:100%}
-.btn{background:red;color:white;border:none;padding:10px;width:100%;border-radius:10px;margin-top:10px}
+
+.btn{background:red;color:white;border:none;padding:10px;width:100%;border-radius:10px}
 </style>
 
 </head>
 <body>
 
-<header>📰 JOVAN NEWS PRO</header>
+<header>📰 JOVAN NEWS LIVE</header>
 
-<div class="breaking">🚨 LIVE NEWS ⚡ BBC STYLE</div>
-
-<!-- CATEGORY -->
-<div class="buttons">
-<button onclick="loadNews('general')">🌍 World</button>
-<button onclick="loadNews('sports')">⚽ Sports</button>
-<button onclick="loadNews('technology')">💻 Tech</button>
-<button onclick="loadNews('business')">💰 Business</button>
-</div>
-
-<!-- SEARCH -->
-<div class="search">
-<input type="text" placeholder="Search news..." onkeyup="searchNews(this.value)">
-</div>
-
-<p id="loading">⏳ Inapakia habari...</p>
+<div class="breaking">🚨 LIVE GLOBAL NEWS 🌍</div>
 
 <div class="news" id="news"></div>
 
-<!-- FULL -->
 <div class="full" id="full">
 <button class="btn" onclick="closeFull()">❌ Close</button>
 <h2 id="title"></h2>
-<img id="image">
+<img id="image" style="width:100%">
 <p id="content"></p>
 <a id="link" target="_blank" style="color:yellow">👉 Soma zaidi</a>
 </div>
 
 <script>
 
-let API_KEY="b6ae304ceec443eb9b9ef709906bde7b";
-let allNews=[];
-
-/* LOAD NEWS */
-function loadNews(category="general"){
-
-document.getElementById("loading").style.display="block";
-
-fetch(`https://api.allorigins.win/raw?url=https://newsapi.org/v2/top-headlines?country=us&category=${category}&pageSize=5&apiKey=${API_KEY}`)
+/* FREE WORKING API */
+fetch("https://api.spaceflightnewsapi.net/v4/articles/")
 .then(res=>res.json())
 .then(data=>{
 
-document.getElementById("loading").style.display="none";
-
-allNews=data.articles;
-
-showNews(allNews);
-
-})
-.catch(err=>{
-document.getElementById("loading").innerText="⚠️ Imeshindikana kupakia news";
-console.log(err);
-});
-
-}
-
-/* SHOW */
-function showNews(data){
-
 let html="";
 
-data.forEach((n,i)=>{
+data.results.slice(0,10).forEach((n,i)=>{
+
 html+=`
 <div class="card" onclick="openFull(${i})">
-<img src="${n.urlToImage || 'https://via.placeholder.com/300'}">
+<img src="${n.image_url}">
 <h3>${n.title}</h3>
 </div>
 `;
+
 });
 
+window.newsData=data.results;
 document.getElementById("news").innerHTML=html;
 
-}
-
-/* SEARCH */
-function searchNews(val){
-let filtered=allNews.filter(n=>n.title.toLowerCase().includes(val.toLowerCase()));
-showNews(filtered);
-}
+});
 
 /* OPEN */
 function openFull(i){
-let n=allNews[i];
+let n=window.newsData[i];
 
 document.getElementById("full").style.display="block";
 document.getElementById("title").innerText=n.title;
-document.getElementById("image").src=n.urlToImage;
-document.getElementById("content").innerText=n.description || "No info";
+document.getElementById("image").src=n.image_url;
+document.getElementById("content").innerText=n.summary;
 document.getElementById("link").href=n.url;
 }
 
@@ -139,14 +80,6 @@ document.getElementById("link").href=n.url;
 function closeFull(){
 document.getElementById("full").style.display="none";
 }
-
-/* START */
-loadNews();
-
-/* AUTO REFRESH */
-setInterval(()=>{
-loadNews();
-},60000);
 
 </script>
 
