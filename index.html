@@ -46,7 +46,7 @@ background:#222;color:white;border:none;padding:8px;border-radius:8px;cursor:poi
 
 <div class="breaking">🚨 LIVE NEWS ⚡ BBC STYLE</div>
 
-<!-- CATEGORY BUTTONS -->
+<!-- CATEGORY -->
 <div class="buttons">
 <button onclick="loadNews('general')">🌍 World</button>
 <button onclick="loadNews('sports')">⚽ Sports</button>
@@ -82,7 +82,7 @@ function loadNews(category="general"){
 
 document.getElementById("loading").style.display="block";
 
-fetch(`https://newsapi.org/v2/top-headlines?country=us&category=${category}&pageSize=5&apiKey=${API_KEY}`)
+fetch(`https://api.allorigins.win/raw?url=https://newsapi.org/v2/top-headlines?country=us&category=${category}&pageSize=5&apiKey=${API_KEY}`)
 .then(res=>res.json())
 .then(data=>{
 
@@ -92,6 +92,10 @@ allNews=data.articles;
 
 showNews(allNews);
 
+})
+.catch(err=>{
+document.getElementById("loading").innerText="⚠️ Imeshindikana kupakia news";
+console.log(err);
 });
 
 }
@@ -136,7 +140,7 @@ function closeFull(){
 document.getElementById("full").style.display="none";
 }
 
-/* AUTO LOAD */
+/* START */
 loadNews();
 
 /* AUTO REFRESH */
