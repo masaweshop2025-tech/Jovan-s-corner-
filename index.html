@@ -3,142 +3,146 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jovan News</title>
+<title>Jovan News Pro</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#111;color:white}
 
 /* HEADER */
-header{
-background:#b80000;
-padding:12px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-header h1{margin:0;font-size:20px}
+header{background:#b80000;padding:12px;text-align:center;font-weight:bold}
 
 /* BREAKING */
-.breaking{
-background:black;
-color:red;
-padding:10px;
-font-weight:bold;
-animation:blink 1s infinite;
-}
-@keyframes blink{
-0%{opacity:1}
-50%{opacity:0.5}
-100%{opacity:1}
+.breaking{background:black;color:red;padding:10px;font-weight:bold;text-align:center}
+
+/* BUTTONS */
+.buttons{display:flex;gap:5px;padding:10px;overflow:auto}
+.buttons button{
+background:#222;color:white;border:none;padding:8px;border-radius:8px;cursor:pointer;
 }
 
-/* GRID */
-.news{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-padding:10px;
-}
-.card{
-background:#222;
-border-radius:10px;
-overflow:hidden;
-cursor:pointer;
-}
+/* SEARCH */
+.search{padding:10px}
+.search input{width:100%;padding:10px;border-radius:20px;border:none}
+
+/* LOADING */
+#loading{text-align:center;padding:20px;color:yellow}
+
+/* NEWS */
+.news{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
+.card{background:#222;border-radius:10px;overflow:hidden;cursor:pointer}
 .card img{width:100%;height:120px;object-fit:cover}
 .card h3{padding:10px;font-size:14px}
 
-/* FULL VIEW */
-.full{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:black;
-padding:20px;
-display:none;
-overflow:auto;
-}
-.full img{width:100%;border-radius:10px}
-
-/* BUTTON */
-.btn{
-background:red;
-color:white;
-border:none;
-padding:10px;
-margin-top:10px;
-width:100%;
-border-radius:10px;
-}
-
+/* FULL */
+.full{position:fixed;top:0;left:0;width:100%;height:100%;background:black;padding:20px;display:none;overflow:auto}
+.full img{width:100%}
+.btn{background:red;color:white;border:none;padding:10px;width:100%;border-radius:10px;margin-top:10px}
 </style>
 
 </head>
 <body>
 
-<header>
-<h1>📰 JOVAN NEWS</h1>
-</header>
+<header>📰 JOVAN NEWS PRO</header>
 
-<div class="breaking">🚨 LIVE NEWS FROM INTERNET 🌍</div>
+<div class="breaking">🚨 LIVE NEWS ⚡ BBC STYLE</div>
+
+<!-- CATEGORY BUTTONS -->
+<div class="buttons">
+<button onclick="loadNews('general')">🌍 World</button>
+<button onclick="loadNews('sports')">⚽ Sports</button>
+<button onclick="loadNews('technology')">💻 Tech</button>
+<button onclick="loadNews('business')">💰 Business</button>
+</div>
+
+<!-- SEARCH -->
+<div class="search">
+<input type="text" placeholder="Search news..." onkeyup="searchNews(this.value)">
+</div>
+
+<p id="loading">⏳ Inapakia habari...</p>
 
 <div class="news" id="news"></div>
 
-<!-- FULL ARTICLE -->
+<!-- FULL -->
 <div class="full" id="full">
 <button class="btn" onclick="closeFull()">❌ Close</button>
 <h2 id="title"></h2>
 <img id="image">
 <p id="content"></p>
-<a id="link" target="_blank" style="color:yellow">👉 Soma habari kamili</a>
+<a id="link" target="_blank" style="color:yellow">👉 Soma zaidi</a>
 </div>
 
 <script>
 
 let API_KEY="b6ae304ceec443eb9b9ef709906bde7b";
+let allNews=[];
 
 /* LOAD NEWS */
-fetch(`https://newsapi.org/v2/top-headlines?country=us&pageSize=20&apiKey=${API_KEY}`)
+function loadNews(category="general"){
+
+document.getElementById("loading").style.display="block";
+
+fetch(`https://newsapi.org/v2/top-headlines?country=us&category=${category}&pageSize=5&apiKey=${API_KEY}`)
 .then(res=>res.json())
 .then(data=>{
 
+document.getElementById("loading").style.display="none";
+
+allNews=data.articles;
+
+showNews(allNews);
+
+});
+
+}
+
+/* SHOW */
+function showNews(data){
+
 let html="";
 
-data.articles.forEach((n,i)=>{
-
+data.forEach((n,i)=>{
 html+=`
 <div class="card" onclick="openFull(${i})">
 <img src="${n.urlToImage || 'https://via.placeholder.com/300'}">
 <h3>${n.title}</h3>
 </div>
 `;
-
 });
 
-window.newsData=data.articles;
 document.getElementById("news").innerHTML=html;
 
-});
+}
 
-/* OPEN FULL */
+/* SEARCH */
+function searchNews(val){
+let filtered=allNews.filter(n=>n.title.toLowerCase().includes(val.toLowerCase()));
+showNews(filtered);
+}
+
+/* OPEN */
 function openFull(i){
-
-let n=window.newsData[i];
+let n=allNews[i];
 
 document.getElementById("full").style.display="block";
 document.getElementById("title").innerText=n.title;
 document.getElementById("image").src=n.urlToImage;
-document.getElementById("content").innerText=n.description || "No description available";
+document.getElementById("content").innerText=n.description || "No info";
 document.getElementById("link").href=n.url;
-
 }
 
 /* CLOSE */
 function closeFull(){
 document.getElementById("full").style.display="none";
 }
+
+/* AUTO LOAD */
+loadNews();
+
+/* AUTO REFRESH */
+setInterval(()=>{
+loadNews();
+},60000);
 
 </script>
 
