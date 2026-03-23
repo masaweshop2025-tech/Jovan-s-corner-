@@ -10,163 +10,50 @@ body{margin:0;font-family:Arial;background:#0a0a0a;color:white}
 
 /* HEADER */
 header{background:linear-gradient(90deg,red,blue);padding:10px}
-.top{display:flex;justify-content:space-between;align-items:center}
-.logo{display:flex;gap:10px;align-items:center}
-.logo img{width:35px}
-
-/* SLIDE TEXT */
-.marquee{
-overflow:hidden;
-white-space:nowrap;
-animation:slide 10s linear infinite;
-color:yellow;
-}
-@keyframes slide{
-0%{transform:translateX(100%)}
-100%{transform:translateX(-100%)}
-}
+.top{display:flex;justify-content:space-between}
+.marquee{animation:slide 10s linear infinite;white-space:nowrap;color:yellow}
+@keyframes slide{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 
 /* SEARCH */
-.search input{
-width:100%;
-padding:10px;
-border-radius:20px;
-border:none;
-}
+.search input{width:100%;padding:10px;border-radius:20px;border:none}
 
 /* PRODUCTS */
-.products{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-padding:10px;
-}
-.card{
-background:#111;
-padding:10px;
-border-radius:15px;
-}
-.card img{
-width:100%;
-border-radius:10px;
-}
-.card h3{color:yellow}
-
-/* BUTTON */
-.btn{
-background:red;
-border:none;
-padding:10px;
-width:100%;
-border-radius:10px;
-color:white;
-}
+.products{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
+.card{background:#111;padding:10px;border-radius:10px}
+.card img{width:100%;border-radius:10px}
+.btn{background:red;color:white;border:none;padding:10px;width:100%;border-radius:10px}
 
 /* CART */
-.cart{
-position:fixed;
-right:-100%;
-top:0;
-width:100%;
-max-width:350px;
-height:100%;
-background:black;
-padding:15px;
-transition:0.3s;
-overflow:auto;
-}
+.cart{position:fixed;right:-100%;top:0;width:300px;height:100%;background:black;padding:15px;transition:0.3s}
 .cart.active{right:0}
 
-/* OPTIONS */
-.option{
-border:1px solid #333;
-padding:10px;
-margin:5px 0;
-border-radius:10px;
-cursor:pointer;
-}
-.option.active{
-border:2px solid red;
-}
-
-/* FLOAT BUTTON */
-.float{
-position:fixed;
-top:10px;
-right:10px;
-background:red;
-color:white;
-padding:10px;
-border-radius:50%;
-}
-
-/* WHATSAPP */
-.whatsapp{
-position:fixed;
-bottom:20px;
-right:20px;
-background:green;
-color:white;
-padding:15px;
-border-radius:50px;
-text-decoration:none;
-}
-
 /* DASHBOARD */
-#dashboard{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:black;
-padding:20px;
-overflow:auto;
-}
-</style>
-</head>
+#bizDashboard{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;padding:20px;overflow:auto}
 
+/* FLOAT */
+.float{position:fixed;top:10px;right:10px;background:red;padding:10px;border-radius:50%}
+.whatsapp{position:fixed;bottom:20px;right:20px;background:green;padding:15px;border-radius:50px;text-decoration:none;color:white}
+</style>
+
+</head>
 <body>
 
 <header>
-
 <div class="top">
-
-<div class="logo">
-<img src="https://cdn-icons-png.flaticon.com/512/892/892458.png">
-<b id="title">JOVAN'S CORNER</b>
+<b>JOVAN'S CORNER</b>
+<button onclick="openBiz()">📊</button>
 </div>
-
-<div>
-<select onchange="changeLang(this.value)">
-<option value="sw">🇹🇿 Sw</option>
-<option value="en">🇬🇧 En</option>
-<option value="tr">🇹🇷 Tr</option>
-<option value="zh">🇨🇳 Zh</option>
-<option value="es">🇪🇸 Es</option>
-</select>
-
-<button onclick="openDashboard()">📊</button>
-</div>
-
-</div>
-
-<div class="marquee" id="welcome">
-🔥 Karibu Jovan's Corner - Viatu bora 🔥
-</div>
-
+<div class="marquee">🔥 Karibu Jovan's Corner - Best Shoes 🔥</div>
 </header>
 
 <div class="search">
-<input type="text" placeholder="Tafuta viatu..." onkeyup="searchProduct(this.value)">
+<input type="text" placeholder="Search shoes..." onkeyup="searchProduct(this.value)">
 </div>
 
 <div class="products" id="products"></div>
 
 <!-- CART -->
 <div class="cart" id="cart">
-
 <h2>🛒 Cart <span onclick="toggleCart()">❌</span></h2>
 
 <div id="cartItems"></div>
@@ -174,22 +61,37 @@ overflow:auto;
 <p>Items: <span id="count">0</span></p>
 <p>Total: <span id="total">0</span> Tsh</p>
 
-<h3>🚚 Delivery</h3>
-<div class="option active" onclick="selectDelivery(this,0)">Free</div>
-<div class="option" onclick="selectDelivery(this,5000)">City - 5000</div>
+<h3>Delivery</h3>
+<select onchange="delivery=this.value;updateCart()">
+<option value="0">Free</option>
+<option value="5000">City 5000</option>
+</select>
 
-<h3>💳 Payment</h3>
-<div class="option active" onclick="selectPayment(this,'mpesa')">M-Pesa</div>
-<div class="option" onclick="selectPayment(this,'cash')">Cash</div>
+<h3>Payment</h3>
+<select onchange="payment=this.value">
+<option value="mpesa">M-Pesa</option>
+<option value="cash">Cash</option>
+</select>
 
-<button class="btn" onclick="order()">Order Now</button>
-
+<button class="btn" onclick="order()">Order</button>
 </div>
 
 <!-- DASHBOARD -->
-<div id="dashboard">
-<h2>Orders <span onclick="closeDashboard()">❌</span></h2>
-<div id="history"></div>
+<div id="bizDashboard">
+<h2>📊 Business Dashboard <span onclick="closeBiz()">❌</span></h2>
+
+<p>Orders: <span id="totalOrders">0</span></p>
+<p>Money: <span id="totalMoney">0</span> Tsh</p>
+
+<div id="orderList"></div>
+</div>
+
+<!-- CHATBOT -->
+<div style="position:fixed;bottom:20px;left:20px;width:220px;background:#111;padding:10px;border-radius:10px;">
+<h4>🤖 Bot</h4>
+<div id="chatBox" style="height:100px;overflow:auto;font-size:12px"></div>
+<input id="userInput" placeholder="andika..." style="width:100%">
+<button onclick="sendMsg()">Send</button>
 </div>
 
 <button class="float" onclick="toggleCart()">🛒</button>
@@ -197,19 +99,18 @@ overflow:auto;
 
 <script>
 
-/* PRODUCTS REAL */
+/* PRODUCTS */
 let products=[
 {name:"Nike Air Max",price:50000,img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"},
 {name:"Adidas Ultraboost",price:65000,img:"https://images.unsplash.com/photo-1528701800489-20be3c5c9f49"},
 {name:"Puma RS-X",price:55000,img:"https://images.unsplash.com/photo-1519741497674-611481863552"},
-{name:"Jordan Retro",price:75000,img:"https://images.unsplash.com/photo-1600180758890-6b94519a8ba6"},
-{name:"Nike Zoom",price:45000,img:"https://images.unsplash.com/photo-1514989940723-e8e51635b782"},
-{name:"Adidas Run",price:42000,img:"https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a"}
+{name:"Jordan Retro",price:75000,img:"https://images.unsplash.com/photo-1600180758890-6b94519a8ba6"}
 ];
 
 let cart=[];
 let delivery=0;
 let payment="mpesa";
+let ordersData=[];
 
 /* LOAD */
 function loadProducts(){
@@ -227,13 +128,12 @@ document.getElementById("products").innerHTML=html;
 }
 loadProducts();
 
-/* ADD */
+/* CART */
 function add(i){
 cart.push(products[i]);
 updateCart();
 }
 
-/* UPDATE */
 function updateCart(){
 let html="";
 let total=0;
@@ -245,44 +145,55 @@ html+=`<p>${p.name}</p>`;
 
 document.getElementById("cartItems").innerHTML=html;
 document.getElementById("count").innerText=cart.length;
-document.getElementById("total").innerText=total+delivery;
+document.getElementById("total").innerText=total + Number(delivery);
 }
 
-/* CART */
 function toggleCart(){
 document.getElementById("cart").classList.toggle("active");
 }
 
-/* DELIVERY */
-function selectDelivery(el,price){
-document.querySelectorAll("h3 + .option").forEach(o=>o.classList.remove("active"));
-el.classList.add("active");
-delivery=price;
+/* ORDER */
+function order(){
+let total=0;
+let list="";
+
+cart.forEach(p=>{
+total+=p.price;
+list+=p.name+" - "+p.price+" Tsh<br>";
+});
+
+ordersData.push({total:total,items:list});
+updateBiz();
+
+let text="ORDER:%0A"+list;
+window.open("https://wa.me/255617816758?text="+text);
+
+cart=[];
 updateCart();
 }
 
-/* PAYMENT */
-function selectPayment(el,type){
-document.querySelectorAll("h3 + .option").forEach(o=>o.classList.remove("active"));
-el.classList.add("active");
-payment=type;
-}
-
-/* ORDER */
-function order(){
-let text="ORDER:%0A";
-cart.forEach(p=>{
-text+=p.name+" - "+p.price+" Tsh%0A";
-});
-window.open("https://wa.me/255617816758?text="+text);
-}
-
 /* DASHBOARD */
-function openDashboard(){
-document.getElementById("dashboard").style.display="block";
+function updateBiz(){
+document.getElementById("totalOrders").innerText=ordersData.length;
+
+let money=0;
+let html="";
+
+ordersData.forEach(o=>{
+money+=o.total;
+html+=`<div>${o.items}<b>${o.total} Tsh</b></div>`;
+});
+
+document.getElementById("totalMoney").innerText=money;
+document.getElementById("orderList").innerHTML=html;
 }
-function closeDashboard(){
-document.getElementById("dashboard").style.display="none";
+
+function openBiz(){
+document.getElementById("bizDashboard").style.display="block";
+}
+
+function closeBiz(){
+document.getElementById("bizDashboard").style.display="none";
 }
 
 /* SEARCH */
@@ -301,69 +212,18 @@ html+=`
 document.getElementById("products").innerHTML=html;
 }
 
-/* LANGUAGE */
-function changeLang(lang){
-
-if(lang=="sw"){
-document.getElementById("welcome").innerText="🔥 Karibu Jovan's Corner 🔥";
-document.querySelector(".search input").placeholder="Tafuta viatu...";
-}
-
-if(lang=="en"){
-document.getElementById("welcome").innerText="🔥 Welcome to Jovan's Corner 🔥";
-document.querySelector(".search input").placeholder="Search shoes...";
-}
-
-if(lang=="tr"){
-document.getElementById("welcome").innerText="🔥 Hoşgeldiniz 🔥";
-document.querySelector(".search input").placeholder="Ara...";
-}
-
-if(lang=="zh"){
-document.getElementById("welcome").innerText="🔥 欢迎 🔥";
-document.querySelector(".search input").placeholder="搜索...";
-}
-
-if(lang=="es"){
-document.getElementById("welcome").innerText="🔥 Bienvenido 🔥";
-document.querySelector(".search input").placeholder="Buscar...";
-}
-
-}
-
-</script>
-<!-- CHATBOT -->
-<div id="chatbot" style="position:fixed;bottom:20px;left:20px;width:250px;background:#111;padding:10px;border-radius:10px;">
-<h4>🤖 Chat Bot</h4>
-
-<div id="chatBox" style="height:150px;overflow:auto;font-size:14px;"></div>
-
-<input type="text" id="userInput" placeholder="Andika hapa..." style="width:100%;padding:5px;">
-<button onclick="sendMsg()" style="width:100%;margin-top:5px;">Send</button>
-</div>
-
-<script>
-
+/* CHATBOT */
 function sendMsg(){
 let input=document.getElementById("userInput").value.toLowerCase();
 let chat=document.getElementById("chatBox");
 
 chat.innerHTML += "<p>👤 "+input+"</p>";
 
-let reply="Sijaelewa 🤔";
+let reply="Sijaelewa";
 
-if(input.includes("bei")){
-reply="Bei zetu zinaanzia 40,000 Tsh 👟";
-}
-else if(input.includes("order")){
-reply="Bonyeza Add kisha Cart ku-order 🛒";
-}
-else if(input.includes("hello") || input.includes("hi")){
-reply="Karibu sana Jovan's Corner 🔥";
-}
-else if(input.includes("delivery")){
-reply="Delivery ni free au 5000 Tsh 🚚";
-}
+if(input.includes("bei")) reply="Bei zinaanzia 40,000 Tsh";
+if(input.includes("hello")) reply="Karibu Jovan's Corner";
+if(input.includes("delivery")) reply="Delivery free au 5000";
 
 chat.innerHTML += "<p>🤖 "+reply+"</p>";
 
@@ -371,89 +231,7 @@ document.getElementById("userInput").value="";
 chat.scrollTop = chat.scrollHeight;
 }
 
-</script>let ordersData=[];
+</script>
 
-function order(){
-
-let total=0;
-let list="";
-
-cart.forEach(p=>{
-total+=p.price;
-list+=p.name+" - "+p.price+" Tsh<br>";
-});
-
-ordersData.push({total:total,items:list});
-
-updateBiz();
-
-let text="ORDER:%0A"+list;
-window.open("https://wa.me/255617816758?text="+text);
-
-cart=[];
-updateCart();
-}
-
-function updateBiz(){
-
-document.getElementById("totalOrders").innerText=ordersData.length;
-
-let money=0;
-let html="";
-
-ordersData.forEach(o=>{
-money+=o.total;
-html+=`<div style="border-bottom:1px solid gray;padding:5px;">
-${o.items}<b>${o.total} Tsh</b></div>`;
-});
-
-document.getElementById("totalMoney").innerText=money;
-document.getElementById("orderList").innerHTML=html;
-}
-
-function openBiz(){
-document.getElementById("bizDashboard").style.display="block";
-}
-
-function closeBiz(){
-document.getElementById("bizDashboard").style.display="none";
-}
-<!-- BUSINESS DASHBOARD -->
-<div id="bizDashboard" style="
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#000;
-color:white;
-padding:20px;
-display:none;
-overflow:auto;
-z-index:999;
-">
-
-<h2>📊 Business Dashboard 
-<span onclick="closeBiz()" style="float:right;cursor:pointer">❌</span>
-</h2>
-
-<p>🛒 Orders: <span id="totalOrders">0</span></p>
-<p>💰 Revenue: <span id="totalMoney">0</span> Tsh</p>
-
-<h3>📦 Order List</h3>
-<div id="orderList"></div>
-
-</div>
-
-<button onclick="openBiz()" style="
-position:fixed;
-bottom:90px;
-right:20px;
-background:blue;
-color:white;
-padding:12px;
-border:none;
-border-radius:50px;
-">📊</button>
 </body>
 </html>
