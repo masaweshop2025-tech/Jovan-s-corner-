@@ -9,21 +9,70 @@
 body{margin:0;font-family:Arial;background:#111;color:white}
 
 /* HEADER */
-header{background:#b80000;padding:10px;display:flex;justify-content:space-between}
-header h1{margin:0}
-nav a{margin:10px;color:white;text-decoration:none;font-weight:bold}
+header{
+background:#b80000;
+padding:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+header h1{margin:0;font-size:20px}
 
 /* BREAKING */
-.breaking{background:black;color:red;padding:10px;font-weight:bold}
+.breaking{
+background:black;
+color:red;
+padding:10px;
+font-weight:bold;
+animation:blink 1s infinite;
+}
+@keyframes blink{
+0%{opacity:1}
+50%{opacity:0.5}
+100%{opacity:1}
+}
 
 /* GRID */
-.news{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px}
-.card{background:#222;border-radius:10px;overflow:hidden}
-.card img{width:100%}
-.card h3{padding:10px}
+.news{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+padding:10px;
+}
+.card{
+background:#222;
+border-radius:10px;
+overflow:hidden;
+cursor:pointer;
+}
+.card img{width:100%;height:120px;object-fit:cover}
+.card h3{padding:10px;font-size:14px}
 
 /* FULL VIEW */
-.full{position:fixed;top:0;left:0;width:100%;height:100%;background:black;padding:20px;display:none;overflow:auto}
+.full{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+padding:20px;
+display:none;
+overflow:auto;
+}
+.full img{width:100%;border-radius:10px}
+
+/* BUTTON */
+.btn{
+background:red;
+color:white;
+border:none;
+padding:10px;
+margin-top:10px;
+width:100%;
+border-radius:10px;
+}
+
 </style>
 
 </head>
@@ -31,72 +80,62 @@ nav a{margin:10px;color:white;text-decoration:none;font-weight:bold}
 
 <header>
 <h1>📰 JOVAN NEWS</h1>
-<nav>
-<a href="#">Home</a>
-<a href="#">Sports</a>
-<a href="#">World</a>
-</nav>
 </header>
 
-<div class="breaking">🚨 BREAKING NEWS: Karibu Jovan News 🔥</div>
+<div class="breaking">🚨 LIVE NEWS FROM INTERNET 🌍</div>
 
 <div class="news" id="news"></div>
 
 <!-- FULL ARTICLE -->
 <div class="full" id="full">
-<button onclick="closeFull()">❌ Close</button>
+<button class="btn" onclick="closeFull()">❌ Close</button>
 <h2 id="title"></h2>
-<img id="image" style="width:100%">
+<img id="image">
 <p id="content"></p>
+<a id="link" target="_blank" style="color:yellow">👉 Soma habari kamili</a>
 </div>
 
 <script>
 
-let newsData=[
-{
-title:"🔥 Serikali yatangaza mabadiliko makubwa",
-img:"https://images.unsplash.com/photo-1504711434969-e33886168f5c",
-content:"Hii ni habari kamili kuhusu serikali..."
-},
-{
-title:"⚽ Simba yashinda 3-0",
-img:"https://images.unsplash.com/photo-1508098682722-e99c643e7485",
-content:"Simba imefanikiwa kushinda..."
-},
-{
-title:"🌍 Dunia yaingia kwenye teknolojia mpya",
-img:"https://images.unsplash.com/photo-1518779578993-ec3579fee39f",
-content:"Teknolojia mpya imeanza..."
-},
-{
-title:"🎬 Movie mpya yatoka",
-img:"https://images.unsplash.com/photo-1517602302552-471fe67acf66",
-content:"Movie mpya imevuma sana..."
-}
-];
+let API_KEY="b6ae304ceec443eb9b9ef709906bde7b";
 
 /* LOAD NEWS */
-function loadNews(){
+fetch(`https://newsapi.org/v2/top-headlines?country=us&pageSize=20&apiKey=${API_KEY}`)
+.then(res=>res.json())
+.then(data=>{
+
 let html="";
-newsData.forEach((n,i)=>{
+
+data.articles.forEach((n,i)=>{
+
 html+=`
 <div class="card" onclick="openFull(${i})">
-<img src="${n.img}">
+<img src="${n.urlToImage || 'https://via.placeholder.com/300'}">
 <h3>${n.title}</h3>
-</div>`;
+</div>
+`;
+
 });
+
+window.newsData=data.articles;
 document.getElementById("news").innerHTML=html;
-}
-loadNews();
+
+});
 
 /* OPEN FULL */
 function openFull(i){
+
+let n=window.newsData[i];
+
 document.getElementById("full").style.display="block";
-document.getElementById("title").innerText=newsData[i].title;
-document.getElementById("image").src=newsData[i].img;
-document.getElementById("content").innerText=newsData[i].content;
+document.getElementById("title").innerText=n.title;
+document.getElementById("image").src=n.urlToImage;
+document.getElementById("content").innerText=n.description || "No description available";
+document.getElementById("link").href=n.url;
+
 }
 
+/* CLOSE */
 function closeFull(){
 document.getElementById("full").style.display="none";
 }
