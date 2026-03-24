@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jovan Farm Investment</title>
+<title>Jovan Farm Pro</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#111;color:white}
@@ -32,19 +32,25 @@ width:100%;
 margin-top:10px;
 }
 
-/* DASHBOARD */
 .dashboard{
 background:#000;
 padding:10px;
 margin-top:10px;
 border-radius:10px;
 }
+
+/* IMAGES */
+.images img{
+width:100%;
+border-radius:10px;
+margin-top:10px;
+}
 </style>
 
 </head>
 <body>
 
-<header>🐄 JOVAN FARM INVESTMENT</header>
+<header>🐄 JOVAN FARM PRO</header>
 
 <div class="container">
 
@@ -54,15 +60,13 @@ border-radius:10px;
 
 <div class="card">
 <h2>🐔 Kuku</h2>
-<p>Bei: 200,000 Tsh</p>
-<p>Muda: Miezi 3</p>
+<p>200,000 Tsh</p>
 <button class="btn" onclick="invest('Kuku',200000)">Invest</button>
 </div>
 
 <div class="card">
 <h2>🐄 Ng'ombe</h2>
-<p>Bei: 500,000 Tsh</p>
-<p>Muda: Miezi 6</p>
+<p>500,000 Tsh</p>
 <button class="btn" onclick="invest('Ngombe',500000)">Invest</button>
 </div>
 
@@ -70,26 +74,32 @@ border-radius:10px;
 
 <div class="dashboard">
 <h3>📊 Dashboard</h3>
-<p id="total">Total Investment: 0 Tsh</p>
-<p id="profit">Estimated Profit: 0 Tsh</p>
-<p id="list"></p>
+<p id="total">Total: 0 Tsh</p>
+<p id="profit">Profit: 0 Tsh</p>
+<div id="list"></div>
+
+<button class="btn" onclick="withdraw()">💸 Withdraw</button>
 </div>
+
+<h3>📸 Live Farm Tracking</h3>
+
+<div class="images" id="images"></div>
 
 </div>
 
 <script>
 
-let investments = JSON.parse(localStorage.getItem("farm")||"[]");
+let investments=JSON.parse(localStorage.getItem("farm")||"[]");
 
+/* INVEST */
 function invest(type,amount){
 
-let profit = amount * 0.25; // 25% mfano
+let profit=amount*0.25;
 
 let data={
 type:type,
 amount:amount,
-profit:profit,
-date:new Date().toLocaleDateString()
+profit:profit
 };
 
 investments.push(data);
@@ -97,8 +107,6 @@ investments.push(data);
 localStorage.setItem("farm",JSON.stringify(investments));
 
 updateUI();
-
-alert("Umewekeza kwenye " + type);
 }
 
 /* UPDATE */
@@ -112,18 +120,63 @@ investments.forEach(i=>{
 total+=i.amount;
 profit+=i.profit;
 
-list+=`
-<p>🐾 ${i.type} - ${i.amount} Tsh (Profit: ${i.profit})</p>
-`;
+list+=`<p>🐾 ${i.type} - ${i.amount} Tsh</p>`;
 });
 
-document.getElementById("total").innerText="Total Investment: "+total+" Tsh";
-document.getElementById("profit").innerText="Estimated Profit: "+profit+" Tsh";
+document.getElementById("total").innerText="Total: "+total+" Tsh";
+document.getElementById("profit").innerText="Profit: "+profit+" Tsh";
 document.getElementById("list").innerHTML=list;
-
 }
 
+/* WITHDRAW */
+function withdraw(){
+
+let profit=0;
+
+investments.forEach(i=>{
+profit+=i.profit;
+});
+
+if(profit===0){
+alert("Hakuna pesa ya kutoa");
+return;
+}
+
+alert("Umeomba withdraw ya "+profit+" Tsh");
+
+investments=[];
+
+localStorage.setItem("farm","[]");
+
 updateUI();
+}
+
+/* LIVE IMAGES (random farm images) */
+function loadImages(){
+
+let imgs=[
+"https://images.unsplash.com/photo-1601758123927-196f9c2d3f3d",
+"https://images.unsplash.com/photo-1598514982846-0d3f7c3f5f9d",
+"https://images.unsplash.com/photo-1607301406259-dfb186e15de8",
+"https://images.unsplash.com/photo-1595433707802-6b2626ef1c14"
+];
+
+let html="";
+
+imgs.forEach(i=>{
+html+=`<img src="${i}">`;
+});
+
+document.getElementById("images").innerHTML=html;
+}
+
+/* AUTO REFRESH IMAGES */
+setInterval(()=>{
+loadImages();
+},5000);
+
+updateUI();
+loadImages();
 
 </script>
 
