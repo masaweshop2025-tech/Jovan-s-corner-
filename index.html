@@ -12,30 +12,33 @@ color:white;
 text-align:center;
 }
 
-/* LOGO CONTAINER */
+/* LOGO BOX */
 .logo-box{
 display:flex;
 justify-content:center;
 align-items:center;
-margin-top:20px;
+margin:20px;
 }
 
-/* ROTATING LOGO */
-.logo{
-width:120px;
-height:120px;
+/* ROTATING RING */
+.ring{
+width:130px;
+height:130px;
 border-radius:50%;
+border:4px solid transparent;
+border-top:4px solid #00ffff;
+border-bottom:4px solid #ff00cc;
+animation:spin 3s linear infinite;
 display:flex;
 justify-content:center;
 align-items:center;
+}
+
+/* TEXT INSIDE */
+.logo-text{
+position:absolute;
 font-weight:bold;
 font-size:14px;
-text-align:center;
-color:white;
-
-background:linear-gradient(45deg,#ff00cc,#00ffff,#ff8c00);
-
-animation:spin 6s linear infinite, glow 2s infinite alternate;
 }
 
 /* ROTATION */
@@ -44,19 +47,12 @@ animation:spin 6s linear infinite, glow 2s infinite alternate;
 100%{transform:rotate(360deg)}
 }
 
-/* GLOW */
-@keyframes glow{
-0%{box-shadow:0 0 10px #ff00cc}
-100%{box-shadow:0 0 30px #00ffff}
-}
-
 /* SLIDER */
 .slider{
 width:100%;
 height:220px;
 position:relative;
 overflow:hidden;
-margin-top:20px;
 }
 
 .slide{
@@ -84,9 +80,8 @@ opacity:1;
 
 <!-- LOGO -->
 <div class="logo-box">
-<div class="logo">
-JOVAN<br>&<br>EVANCE
-</div>
+<div class="ring"></div>
+<div class="logo-text">JOVAN & EVANCE</div>
 </div>
 
 <!-- SLIDER -->
