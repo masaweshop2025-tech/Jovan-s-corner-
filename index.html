@@ -12,39 +12,21 @@ color:white;
 text-align:center;
 }
 
-/* LOGO BOX */
-.logo-box{
-display:flex;
-justify-content:center;
-align-items:center;
-margin:20px;
-}
-
-/* ROTATING RING */
-.ring{
-width:130px;
-height:130px;
-border-radius:50%;
-border:4px solid transparent;
-border-top:4px solid #00ffff;
-border-bottom:4px solid #ff00cc;
-animation:spin 3s linear infinite;
-display:flex;
-justify-content:center;
-align-items:center;
-}
-
-/* TEXT INSIDE */
-.logo-text{
-position:absolute;
+/* LOGO */
+.logo{
+font-size:28px;
 font-weight:bold;
-font-size:14px;
+padding:15px;
+background:linear-gradient(90deg,#ff00cc,#00ffff,#ff8c00);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+animation:glow 2s infinite alternate;
 }
 
-/* ROTATION */
-@keyframes spin{
-0%{transform:rotate(0deg)}
-100%{transform:rotate(360deg)}
+/* GLOW */
+@keyframes glow{
+0%{text-shadow:0 0 5px #ff00cc}
+100%{text-shadow:0 0 20px #00ffff}
 }
 
 /* SLIDER */
@@ -79,10 +61,7 @@ opacity:1;
 <body>
 
 <!-- LOGO -->
-<div class="logo-box">
-<div class="ring"></div>
-<div class="logo-text">JOVAN & EVANCE</div>
-</div>
+<div class="logo"> JOVAN & EVANCE </div>
 
 <!-- SLIDER -->
 <div class="slider">
