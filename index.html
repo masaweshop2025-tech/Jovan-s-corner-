@@ -1,122 +1,176 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Science Book</title>
+<title>J&E Hub</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#111;color:white}
 
-header{
-background:blue;
-padding:12px;
-text-align:center;
-font-weight:bold;
-}
-
-.container{
-padding:15px;
-line-height:1.6;
-}
-
-/* PAGE */
-.page{
-min-height:300px;
-}
-
-/* BUTTONS */
-.controls{
-position:fixed;
-bottom:0;
-width:100%;
-display:flex;
-}
-
-button{
-flex:1;
-padding:15px;
-border:none;
-background:blue;
+/* BACKGROUND ANIMATION */
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(-45deg,#ff0080,#00ffff,#ff8c00,#3333ff);
+background-size:400% 400%;
+animation:bgMove 10s infinite alternate;
 color:white;
-font-size:16px;
 }
-</style>
 
+@keyframes bgMove{
+0%{background-position:0% 50%}
+100%{background-position:100% 50%}
+}
+
+/* HEADER */
+header{
+text-align:center;
+padding:20px;
+font-size:22px;
+font-weight:bold;
+animation:fadeIn 2s;
+}
+
+/* CONTAINER */
+.container{padding:15px}
+
+/* CARD */
+.card{
+background:rgba(0,0,0,0.5);
+border-radius:15px;
+padding:15px;
+margin-bottom:15px;
+animation:slideUp 1s;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
+box-shadow:0 0 20px #00ffff;
+}
+
+/* TITLE GLOW */
+h3{
+color:#fff;
+text-shadow:0 0 10px #ff00ff,0 0 20px #00ffff;
+}
+
+/* TEXTAREA */
+textarea{
+width:100%;
+height:80px;
+border:none;
+border-radius:10px;
+padding:10px;
+}
+
+/* BUTTON */
+.btn{
+background:linear-gradient(90deg,#ff00cc,#3333ff);
+border:none;
+padding:12px;
+width:100%;
+border-radius:10px;
+margin-top:10px;
+color:white;
+font-weight:bold;
+cursor:pointer;
+animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.05)}
+100%{transform:scale(1)}
+}
+
+/* FLOATING BALLS */
+.ball{
+position:fixed;
+width:10px;
+height:10px;
+background:white;
+border-radius:50%;
+opacity:0.5;
+animation:float 10s infinite linear;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh)}
+100%{transform:translateY(-10vh)}
+}
+
+/* ANIMATIONS */
+@keyframes slideUp{
+from{transform:translateY(50px);opacity:0}
+to{transform:translateY(0);opacity:1}
+}
+
+@keyframes fadeIn{
+from{opacity:0}
+to{opacity:1}
+}
+
+</style>
 </head>
+
 <body>
 
-<header>📘 SAYANSI YA MAISHA</header>
+<header>💪 JOVAN & EVANCE HUB 🔥</header>
+
+<!-- FLOATING EFFECT -->
+<div class="ball" style="left:10%;animation-duration:8s;"></div>
+<div class="ball" style="left:30%;animation-duration:12s;"></div>
+<div class="ball" style="left:60%;animation-duration:10s;"></div>
+<div class="ball" style="left:80%;animation-duration:15s;"></div>
 
 <div class="container">
-<h2 id="title"></h2>
-<p id="content" class="page"></p>
+
+<div class="card">
+<h3>🤝 Brotherhood</h3>
+<p>Rafiki wa kweli anakusimamia hata wengine wakikuacha.</p>
 </div>
 
-<div class="controls">
-<button onclick="prevPage()">⬅️ Back</button>
-<button onclick="nextPage()">Next ➡️</button>
+<div class="card">
+<h3>❤️ Relationship</h3>
+<p>Usikimbilie mapenzi bila kujijua kwanza bro...</p>
+</div>
+
+<div class="card">
+<h3>🧠 Advice</h3>
+<p>Focus na maisha yako, pesa itakuja baadaye 💯</p>
+</div>
+
+<!-- POST -->
+<div class="card">
+<h3>✍️ Post Something</h3>
+<textarea id="text" placeholder="Andika mawazo yako..."></textarea>
+<button class="btn" onclick="post()">🚀 Post</button>
+</div>
+
+<div id="posts"></div>
+
 </div>
 
 <script>
 
-/* BOOK PAGES (ongeza hadi 100) */
-let book=[
+function post(){
+let t=document.getElementById("text").value;
 
-{
-title:"Sura ya 1: Sayansi ni Nini?",
-content:"Sayansi ni njia ya kuelewa dunia kupitia uchunguzi na majaribio. Inatusaidia kuelewa mambo kama mvua, mwili wa binadamu na teknolojia."
-},
-
-{
-title:"Sura ya 2: Aina za Sayansi",
-content:"Kuna aina nyingi za sayansi kama fizikia, kemia na baiolojia. Kila moja inaelezea sehemu tofauti ya maisha."
-},
-
-{
-title:"Sura ya 3: Mwili wa Binadamu",
-content:"Mwili wa binadamu una mifumo mingi kama mfumo wa damu, mfumo wa fahamu na mfumo wa chakula."
-},
-
-{
-title:"Sura ya 4: Dunia",
-content:"Dunia ni sayari tunayoishi. Ina bahari, ardhi na anga ambayo hutegemea maisha yetu."
-},
-
-{
-title:"Sura ya 5: Teknolojia",
-content:"Teknolojia ni matumizi ya sayansi kutengeneza vifaa kama simu, kompyuta na internet."
+if(t===""){
+alert("Andika kitu bro");
+return;
 }
 
-];
+let post=`
+<div class="card">
+<h3>🔥 New Post</h3>
+<p>${t}</p>
+</div>
+`;
 
-let page=0;
+document.getElementById("posts").innerHTML+=post;
 
-/* SHOW PAGE */
-function showPage(){
-document.getElementById("title").innerText=book[page].title;
-document.getElementById("content").innerText=book[page].content;
+document.getElementById("text").value="";
 }
-
-/* NEXT */
-function nextPage(){
-if(page < book.length-1){
-page++;
-showPage();
-}else{
-alert("Mwisho wa kitabu 📘");
-}
-}
-
-/* PREVIOUS */
-function prevPage(){
-if(page > 0){
-page--;
-showPage();
-}
-}
-
-showPage();
 
 </script>
 
