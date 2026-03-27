@@ -3,44 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jovan Farm Pro</title>
+<title>Love Stories</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#111;color:white}
 
-header{background:green;padding:12px;text-align:center;font-weight:bold}
+/* HEADER */
+header{background:pink;padding:12px;text-align:center;font-weight:bold;color:black}
 
-.container{padding:10px}
-
-/* CARDS */
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-
-.card{
+/* BOOK LIST */
+.books{padding:10px}
+.book{
 background:#222;
-border-radius:10px;
 padding:10px;
-text-align:center;
+border-radius:10px;
+margin-bottom:10px;
+cursor:pointer;
+}
+
+/* CHAPTER */
+.chapter{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+padding:20px;
+display:none;
+overflow:auto;
 }
 
 .btn{
-background:green;
-color:white;
+background:pink;
 border:none;
 padding:10px;
-border-radius:10px;
-width:100%;
-margin-top:10px;
-}
-
-.dashboard{
-background:#000;
-padding:10px;
-margin-top:10px;
-border-radius:10px;
-}
-
-/* IMAGES */
-.images img{
 width:100%;
 border-radius:10px;
 margin-top:10px;
@@ -50,133 +47,90 @@ margin-top:10px;
 </head>
 <body>
 
-<header>🐄 JOVAN FARM PRO</header>
+<header>❤️ LOVE STORIES LIBRARY</header>
 
-<div class="container">
+<div class="books">
 
-<h3>Chagua Uwekezaji</h3>
-
-<div class="grid">
-
-<div class="card">
-<h2>🐔 Kuku</h2>
-<p>200,000 Tsh</p>
-<button class="btn" onclick="invest('Kuku',200000)">Invest</button>
+<div class="book" onclick="openBook(0)">
+<h3>📖 Mapenzi ya Kweli</h3>
+<p>Story ya moyo na maisha...</p>
 </div>
 
-<div class="card">
-<h2>🐄 Ng'ombe</h2>
-<p>500,000 Tsh</p>
-<button class="btn" onclick="invest('Ngombe',500000)">Invest</button>
+<div class="book" onclick="openBook(1)">
+<h3>💔 Upendo na Maumivu</h3>
+<p>Mapenzi yaliyojaa drama...</p>
 </div>
 
 </div>
 
-<div class="dashboard">
-<h3>📊 Dashboard</h3>
-<p id="total">Total: 0 Tsh</p>
-<p id="profit">Profit: 0 Tsh</p>
-<div id="list"></div>
+<!-- READER -->
+<div class="chapter" id="reader">
+<button class="btn" onclick="closeBook()">❌ Close</button>
 
-<button class="btn" onclick="withdraw()">💸 Withdraw</button>
-</div>
+<h2 id="title"></h2>
+<p id="content"></p>
 
-<h3>📸 Live Farm Tracking</h3>
-
-<div class="images" id="images"></div>
-
+<button class="btn" onclick="nextChapter()">➡️ Next</button>
 </div>
 
 <script>
 
-let investments=JSON.parse(localStorage.getItem("farm")||"[]");
-
-/* INVEST */
-function invest(type,amount){
-
-let profit=amount*0.25;
-
-let data={
-type:type,
-amount:amount,
-profit:profit
-};
-
-investments.push(data);
-
-localStorage.setItem("farm",JSON.stringify(investments));
-
-updateUI();
+/* BOOK DATA */
+let books=[
+{
+title:"Mapenzi ya Kweli",
+chapters:[
+"Jovan alikutana naye siku ya mvua... moyo wake ulianza kubadilika.",
+"Kila siku waliongea... mapenzi yakaanza kukua polepole.",
+"Siku moja alitoweka... na hapo ndipo maumivu yalianza."
+]
+},
+{
+title:"Upendo na Maumivu",
+chapters:[
+"Alimpenda kwa dhati... lakini hakujua mwisho wake ungekuwa mgumu.",
+"Alimsaliti... machozi yakaanza kumwagika.",
+"Aliamua kuanza upya... maisha mapya yakaanza."
+]
 }
-
-/* UPDATE */
-function updateUI(){
-
-let total=0;
-let profit=0;
-let list="";
-
-investments.forEach(i=>{
-total+=i.amount;
-profit+=i.profit;
-
-list+=`<p>🐾 ${i.type} - ${i.amount} Tsh</p>`;
-});
-
-document.getElementById("total").innerText="Total: "+total+" Tsh";
-document.getElementById("profit").innerText="Profit: "+profit+" Tsh";
-document.getElementById("list").innerHTML=list;
-}
-
-/* WITHDRAW */
-function withdraw(){
-
-let profit=0;
-
-investments.forEach(i=>{
-profit+=i.profit;
-});
-
-if(profit===0){
-alert("Hakuna pesa ya kutoa");
-return;
-}
-
-alert("Umeomba withdraw ya "+profit+" Tsh");
-
-investments=[];
-
-localStorage.setItem("farm","[]");
-
-updateUI();
-}
-
-/* LIVE IMAGES (random farm images) */
-function loadImages(){
-
-let imgs=[
-"https://images.unsplash.com/photo-1601758123927-196f9c2d3f3d",
-"https://images.unsplash.com/photo-1598514982846-0d3f7c3f5f9d",
-"https://images.unsplash.com/photo-1607301406259-dfb186e15de8",
-"https://images.unsplash.com/photo-1595433707802-6b2626ef1c14"
 ];
 
-let html="";
+let currentBook=0;
+let currentChapter=0;
 
-imgs.forEach(i=>{
-html+=`<img src="${i}">`;
-});
+/* OPEN */
+function openBook(i){
+currentBook=i;
+currentChapter=0;
 
-document.getElementById("images").innerHTML=html;
+document.getElementById("reader").style.display="block";
+showChapter();
 }
 
-/* AUTO REFRESH IMAGES */
-setInterval(()=>{
-loadImages();
-},5000);
+/* SHOW */
+function showChapter(){
+let b=books[currentBook];
 
-updateUI();
-loadImages();
+document.getElementById("title").innerText=b.title+" - Chapter "+(currentChapter+1);
+document.getElementById("content").innerText=b.chapters[currentChapter];
+}
+
+/* NEXT */
+function nextChapter(){
+currentChapter++;
+
+if(currentChapter>=books[currentBook].chapters.length){
+alert("Mwisho wa story ❤️");
+currentChapter=0;
+}
+
+showChapter();
+}
+
+/* CLOSE */
+function closeBook(){
+document.getElementById("reader").style.display="none";
+}
 
 </script>
 
