@@ -3,134 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Love Stories</title>
+<title>Science Book</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#111;color:white}
 
-/* HEADER */
-header{background:pink;padding:12px;text-align:center;font-weight:bold;color:black}
-
-/* BOOK LIST */
-.books{padding:10px}
-.book{
-background:#222;
-padding:10px;
-border-radius:10px;
-margin-bottom:10px;
-cursor:pointer;
+header{
+background:blue;
+padding:12px;
+text-align:center;
+font-weight:bold;
 }
 
-/* CHAPTER */
-.chapter{
+.container{
+padding:15px;
+line-height:1.6;
+}
+
+/* PAGE */
+.page{
+min-height:300px;
+}
+
+/* BUTTONS */
+.controls{
 position:fixed;
-top:0;
-left:0;
+bottom:0;
 width:100%;
-height:100%;
-background:black;
-padding:20px;
-display:none;
-overflow:auto;
+display:flex;
 }
 
-.btn{
-background:pink;
+button{
+flex:1;
+padding:15px;
 border:none;
-padding:10px;
-width:100%;
-border-radius:10px;
-margin-top:10px;
+background:blue;
+color:white;
+font-size:16px;
 }
 </style>
 
 </head>
 <body>
 
-<header>❤️ LOVE STORIES LIBRARY</header>
+<header>📘 SAYANSI YA MAISHA</header>
 
-<div class="books">
-
-<div class="book" onclick="openBook(0)">
-<h3>📖 Mapenzi ya Kweli</h3>
-<p>Story ya moyo na maisha...</p>
-</div>
-
-<div class="book" onclick="openBook(1)">
-<h3>💔 Upendo na Maumivu</h3>
-<p>Mapenzi yaliyojaa drama...</p>
-</div>
-
-</div>
-
-<!-- READER -->
-<div class="chapter" id="reader">
-<button class="btn" onclick="closeBook()">❌ Close</button>
-
+<div class="container">
 <h2 id="title"></h2>
-<p id="content"></p>
+<p id="content" class="page"></p>
+</div>
 
-<button class="btn" onclick="nextChapter()">➡️ Next</button>
+<div class="controls">
+<button onclick="prevPage()">⬅️ Back</button>
+<button onclick="nextPage()">Next ➡️</button>
 </div>
 
 <script>
 
-/* BOOK DATA */
-let books=[
+/* BOOK PAGES (ongeza hadi 100) */
+let book=[
+
 {
-title:"Mapenzi ya Kweli",
-chapters:[
-"Jovan alikutana naye siku ya mvua... moyo wake ulianza kubadilika.",
-"Kila siku waliongea... mapenzi yakaanza kukua polepole.",
-"Siku moja alitoweka... na hapo ndipo maumivu yalianza."
-]
+title:"Sura ya 1: Sayansi ni Nini?",
+content:"Sayansi ni njia ya kuelewa dunia kupitia uchunguzi na majaribio. Inatusaidia kuelewa mambo kama mvua, mwili wa binadamu na teknolojia."
 },
+
 {
-title:"Upendo na Maumivu",
-chapters:[
-"Alimpenda kwa dhati... lakini hakujua mwisho wake ungekuwa mgumu.",
-"Alimsaliti... machozi yakaanza kumwagika.",
-"Aliamua kuanza upya... maisha mapya yakaanza."
-]
+title:"Sura ya 2: Aina za Sayansi",
+content:"Kuna aina nyingi za sayansi kama fizikia, kemia na baiolojia. Kila moja inaelezea sehemu tofauti ya maisha."
+},
+
+{
+title:"Sura ya 3: Mwili wa Binadamu",
+content:"Mwili wa binadamu una mifumo mingi kama mfumo wa damu, mfumo wa fahamu na mfumo wa chakula."
+},
+
+{
+title:"Sura ya 4: Dunia",
+content:"Dunia ni sayari tunayoishi. Ina bahari, ardhi na anga ambayo hutegemea maisha yetu."
+},
+
+{
+title:"Sura ya 5: Teknolojia",
+content:"Teknolojia ni matumizi ya sayansi kutengeneza vifaa kama simu, kompyuta na internet."
 }
+
 ];
 
-let currentBook=0;
-let currentChapter=0;
+let page=0;
 
-/* OPEN */
-function openBook(i){
-currentBook=i;
-currentChapter=0;
-
-document.getElementById("reader").style.display="block";
-showChapter();
-}
-
-/* SHOW */
-function showChapter(){
-let b=books[currentBook];
-
-document.getElementById("title").innerText=b.title+" - Chapter "+(currentChapter+1);
-document.getElementById("content").innerText=b.chapters[currentChapter];
+/* SHOW PAGE */
+function showPage(){
+document.getElementById("title").innerText=book[page].title;
+document.getElementById("content").innerText=book[page].content;
 }
 
 /* NEXT */
-function nextChapter(){
-currentChapter++;
-
-if(currentChapter>=books[currentBook].chapters.length){
-alert("Mwisho wa story ❤️");
-currentChapter=0;
+function nextPage(){
+if(page < book.length-1){
+page++;
+showPage();
+}else{
+alert("Mwisho wa kitabu 📘");
+}
 }
 
-showChapter();
+/* PREVIOUS */
+function prevPage(){
+if(page > 0){
+page--;
+showPage();
+}
 }
 
-/* CLOSE */
-function closeBook(){
-document.getElementById("reader").style.display="none";
-}
+showPage();
 
 </script>
 
