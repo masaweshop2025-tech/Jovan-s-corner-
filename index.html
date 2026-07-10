@@ -4,18 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Za Kale No Dhahabu | DJ Jovan Bayo Jr</title>
-  <meta name="description" content="Kipindi cha nyimbo za zamani zenye thamani ya dhahabu. Na DJ Jovan Bayo Jr">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
       background: linear-gradient(135deg, #0a0a0a 0%, #2b1a00 100%);
       color: #fff;
-      line-height: 1.6;
     }
     header {
-      background: url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80') center/cover;
-      padding: 80px 20px;
+      background: url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80') center/cover; /* Hii ni picha ya DJ mchanganyiko */
+      padding: 120px 20px;
       text-align: center;
       border-bottom: 4px solid #FFD700;
       position: relative;
@@ -27,27 +25,17 @@
       background: rgba(0,0,0,0.7);
     }
     header * { position: relative; z-index: 2; }
-    h1 {
-      font-size: 3em;
-      color: #FFD700;
-      text-shadow: 3px 3px 6px #000;
-      margin-bottom: 10px;
-    }
-    h2 { color: #ddd; font-weight: 300; }
+    h1 { font-size: 3em; color: #FFD700; text-shadow: 3px 3px 6px #000; }
+    h2 { color: #ddd; font-weight: 300; margin-top: 10px; }
     .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
     
-    .player-card {
+    .coming-soon {
       background: rgba(255,215,0,0.1);
       padding: 30px;
       border-radius: 20px;
       border: 2px solid #FFD700;
       text-align: center;
       margin-bottom: 40px;
-    }
-    audio {
-      width: 100%;
-      margin: 20px 0;
-      border-radius: 10px;
     }
     
     .grid {
@@ -60,11 +48,6 @@
       padding: 25px;
       border-radius: 15px;
       border: 1px solid #444;
-      transition: 0.3s;
-    }
-    .card:hover {
-      border-color: #FFD700;
-      transform: translateY(-5px);
     }
     .btn {
       display: inline-block;
@@ -75,31 +58,14 @@
       text-decoration: none;
       font-weight: bold;
       margin-top: 15px;
-      transition: 0.3s;
-    }
-    .btn:hover { background: #fff; }
-    
-    .playlist li {
-      padding: 12px;
-      border-bottom: 1px solid #333;
-      list-style: none;
-      display: flex;
-      justify-content: space-between;
     }
     .gold { color: #FFD700; }
-    
     footer {
       background: #000;
       text-align: center;
       padding: 30px 20px;
       margin-top: 50px;
       border-top: 2px solid #FFD700;
-    }
-    .social a {
-      color: #FFD700;
-      margin: 0 10px;
-      font-size: 1.5em;
-      text-decoration: none;
     }
   </style>
 </head>
@@ -112,47 +78,33 @@
 
   <div class="container">
     
-    <div class="player-card">
-      <h2>🔴 SIKILIZA LIVE SASA</h2>
-      <p>Kila Ijumaa & Jumamosi | Saa 8:00 mchana - 12:00 jioni</p>
-      <audio controls>
-        <source src="https://stream.zeno.fm/0r0a792kwz8uv" type="audio/mpeg">
-        Browser yako haizungwi audio.
-      </audio>
-      <small>*Kama link haifanyi, weka link ya radio yako hapa</small>
+    <div class="coming-soon">
+      <h2>🔜 RADIO YA LIVE INAKUJA HIVI KARIBUNI</h2>
+      <p>Pakua app yetu ili usikose kipindi kinapoanza</p>
+      <a href="#" class="btn">Fuata Updates</a>
     </div>
 
     <div class="grid">
       <div class="card">
         <h3 class="gold">TOP 5 ZA WIKI</h3>
-        <ul class="playlist">
-          <li><span>1. Marvin Gaye</span> <span>What's Going On</span></li>
-          <li><span>2. Lucky Dube</span> <span>Remember Me</span></li>
-          <li><span>3. Al Green</span> <span>Let's Stay Together</span></li>
-          <li><span>4. Brenda Fassie</span> <span>Vulindlela</span></li>
-          <li><span>5. Mbaraka Mwinshonzi</span> <span>Maisha</span></li>
-        </ul>
+        <p>1. Marvin Gaye - What's Going On</p>
+        <p>2. Lucky Dube - Remember Me</p>
+        <p>3. Al Green - Let's Stay Together</p>
+        <p>4. Brenda Fassie - Vulindlela</p>
+        <p>5. Mbaraka Mwinshonzi - Maisha</p>
       </div>
 
       <div class="card">
         <h3 class="gold">TUMA OMBI LAKO</h3>
-        <p>Unataka tusikie wimbo gani? Tuma ujumbe moja kwa moja</p>
-        <a href="https://wa.me/255712345678" class="btn">WhatsApp DJ Jovan</a>
+        <p>Unataka tusikie wimbo gani kwenye kipindi?</p>
+        <a href="https://wa.me/255712345678" class="btn">WhatsApp DJ Jovan</a> <!-- WEKA NAMBA YAKO -->
       </div>
 
       <div class="card">
-        <h3 class="gold">KUHUSU KIPINDI</h3>
-        <p>Za Kale No Dhahabu inakupeleka safari ya nyimbo za 70s, 80s, 90s na 2000s. Muziki ambao hauwezi kusahau.</p>
-      </div>
-
-      <div class="card">
-        <h3 class="gold">FUATILIA</h3>
-        <p>Pata update za nyimbo na vipindi</p>
-        <div class="social">
-          <a href="#">📘</a>
-          <a href="#">📷</a>
-          <a href="#">🎵</a>
-        </div>
+        <h3 class="gold">RATIBA YA KIPINDI</h3>
+        <p><span class="gold">Ijumaa:</span> Saa 8:00 mchana - 12:00 jioni</p>
+        <p><span class="gold">Jumamosi:</span> Saa 8:00 mchana - 12:00 jioni</p>
+        <p>Rudia tena!</p>
       </div>
     </div>
   </div>
